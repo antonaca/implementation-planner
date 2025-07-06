@@ -10,7 +10,7 @@
       "source" : "**/*.html",
       "headers" : [ {
         "key" : "Content-Type",
-        "value" : "text/html"
+        "value" : "html/css"
       } ]
     } ]
   }
