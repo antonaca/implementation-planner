@@ -7,7 +7,7 @@
       "**/node_modules/**"
     ],
     "headers": [ {
-      "source" : "**/*.html",
+      "source" : "/index.html",
       "headers" : [ {
         "key" : "Content-Type",
         "value" : "html/css"
