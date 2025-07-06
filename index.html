@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementation Planning & Tracking Template</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 id="sidebar-title">New Project</h2>
+            </div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="#" class="nav-link active" data-target="overview-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2 12.75V12A4.5 4.5 0 0 1 6.5 7.5h11A4.5 4.5 0 0 1 22 12v.75M2 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h11.25m-11.25 0V16.5c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m-3.375 0h3.375m7.875 0h3.375M17.625 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h-11.25" />
+                        </svg>
+                        Overview
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="model-landing">
+                         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 01-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 013.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 013.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 01-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 18l-1.035.259a3.375 3.375 0 00-2.456 2.456L18 21.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 18l1.035-.259a3.375 3.375 0 002.456-2.456L18 12z" />
+                        </svg>
+                        Model
+                    </a>
+                    <ul class="dropdown">
+                        <li><a href="#" class="nav-link" data-target="determinants">Determinants</a></li>
+                        <li><a href="#" class="nav-link" data-target="strategies">Strategies</a></li>
+                        <li><a href="#" class="nav-link" data-target="mechanisms">Mechanisms</a></li>
+                        <li><a href="#" class="nav-link" data-target="outcomes">Outcomes</a></li>
+                    </ul>
+                </li>
+                 <li>
+                    <a href="#" class="nav-link" data-target="plan-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75c0-.231-.035-.454-.1-.664M6.75 7.5H18a2.25 2.25 0 0 1 2.25 2.25v9.75a2.25 2.25 0 0 1-2.25-2.25H6.75a2.25 2.25 0 0 1-2.25-2.25V9.75a2.25 2.25 0 0 1 2.25-2.25Z" />
+                        </svg>
+                        Plan
+                    </a>
+                     <ul class="dropdown">
+                        <li><a href="#" class="nav-link" data-target="protocol">Protocol</a></li>
+                        <li><a href="#" class="nav-link" data-target="fidelity">Fidelity</a></li>
+                        <li><a href="#" class="nav-link" data-target="instruments">Instruments</a></li>
+                    </ul>
+                </li>
+                 <li>
+                    <a href="#" class="nav-link" data-target="log-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
+                        Log
+                    </a>
+                    <ul class="dropdown">
+                        <li><a href="#" class="nav-link" data-target="adaptations">Adaptations</a></li>
+                        <li><a href="#" class="nav-link" data-target="risks">Risks</a></li>
+                        <li><a href="#" class="nav-link" data-target="opportunities">Opportunities</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="report-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                        Report
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link" data-target="glossary">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                        Glossary
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div id="overview-landing" class="content-section active">
+                <div class="content-card">
+                    <h3>Project Overview</h3>
+                    <div class="form-group">
+                        <label for="project-name">Title:</label>
+                        <input type="text" id="project-name" class="saveable" placeholder="Enter a name for the project or initiative."/>
+                    </div>
+                    <div class="form-group">
+                        <label for="primary-goal">Primary Goal:</label>
+                        <textarea id="primary-goal" class="saveable" placeholder="State the main goal of this implementation effort."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ebp">Evidence-Based Practice (EBP) or Initiative:</label>
+                        <textarea id="ebp" class="saveable" placeholder="Describe the core intervention or practice being implemented."></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label>Team & Roles:</label>
+                        <table id="team-members-table">
+                            <thead><tr><th style="width: 40%;">Name</th><th style="width: 55%;">Role / Responsibilities</th><th style="width: 5%;"></th></tr></thead>
+                            <tbody>
+                                <tr class="no-data-row" style="display: none;"><td colspan="3" class="no-data-message">No team members have been added.</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="table-actions"><button class="add-row-btn" data-table="team-members-table">Add Member</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="model-landing" class="content-section">
+                <h3>Implementation Research Logic Model (IRLM)</h3>
+                <div class="horizontal-scroll-container">
+                    <div class="module-front-matter" data-module="determinants">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Determinants</h4></div>
+                                <div class="module-summary">
+                                     The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="determinants-count">0</span> Identified</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter" data-module="strategies">
+                         <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Strategies</h4></div>
+                                <div class="module-summary">
+                                     The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
+                                </div>
+                                <div class="module-dashboard">
+                                     <div class="dashboard-stat"><span class="stat-value" id="strategies-count">0</span> Selected</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                     <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter" data-module="mechanisms">
+                         <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Mechanisms</h4></div>
+                                <div class="module-summary">
+                                    Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
+                                </div>
+                                 <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="mechanisms-count">0</span> Hypothesized</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                     <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter" data-module="outcomes">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Outcomes</h4></div>
+                                <div class="module-summary">
+                                    <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
+                                </div>
+                                 <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="implementation-outcomes-count">0</span> Implementation</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="service-outcomes-count">0</span> Service</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="client-outcomes-count">0</span> Client</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plan-landing" class="content-section">
+                <h3>Implementation Plan</h3>
+                <div class="landing-page-grid">
+                    <div class="module-front-matter" data-module="protocol">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Protocol</h4></div>
+                                <div class="module-summary">
+                                     The <b>protocol</b> translates implementation strategies into structured, measurable processes that capture all of the activities, tasks, events, and milestones, with responsible owners and deadlines to ensure accountability and track progress.
+                                </div>
+                                <div class="module-dashboard">
+                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-count">0</span> Tasks</div>
+                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-overdue-count">0</span> Overdue</div>
+                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-complete-count">0</span> Complete</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="module-front-matter" data-module="fidelity">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Fidelity</h4></div>
+                                <div class="module-summary">
+                                    <b>Fidelity</b> refers to how closely implementation adheres to the original, evidence-based protocol. Specify the EBP's <i>core components</i> (the essential, non-negotiable elements) and plan how to measure them.
+                                </div>
+                                 <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="fidelity-components-count">0</span> Core Components</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="module-front-matter" data-module="instruments">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Instruments</h4></div>
+                                <div class="module-summary">
+                                    Document the specific <b>instruments</b> (e.g., surveys, checklists, interview guides) used to measure outcomes, fidelity, and other key constructs throughout the implementation project.
+                                </div>
+                                 <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="instruments-count">0</span> Logged</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="log-landing" class="content-section">
+                <h3>Implementation Log</h3>
+                <div class="horizontal-scroll-container">
+                    <div class="module-front-matter" data-module="adaptations">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Adaptations</h4></div>
+                                <div class="module-summary">
+                                     The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="adaptations-count">0</span> Logged</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="module-front-matter" data-module="risks">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Risks</h4></div>
+                                <div class="module-summary">
+                                     A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.
+                                </div>
+                                 <div class="module-dashboard">
+                                     <div class="dashboard-stat"><span class="stat-value" id="risks-count">0</span> Logged</div>
+                                     <div class="dashboard-stat"><span class="stat-value" id="high-impact-risks-count">0</span> High Impact</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="module-front-matter" data-module="opportunities">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Opportunities</h4></div>
+                                <div class="module-summary">
+                                     A structured log to capture unexpected <b>opportunities</b> to enhance the implementation process or outcomes, including their potential <i>benefit</i> and <i>feasibility</i> to make informed decisions about pursuing them.
+                                </div>
+                                 <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="opportunities-count">0</span> Logged</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="high-benefit-opps-count">0</span> High Benefit</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="report-landing" class="content-section">
+                 <h3>Implementation Report</h3>
+                 <div class="landing-page-grid">
+                    <div class="module-front-matter" data-module="summary">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Summary & Dashboard</h4></div>
+                                <div class="module-summary">
+                                     A comprehensive summary and dynamic performance dashboard. Provides a high-level view of the implementation effort, including progress against the protocol.
+                                </div>
+                                <div class="module-dashboard">
+                                     <div class="dashboard-stat"><span class="stat-value" id="report-progress-kpi">0%</span> Progress</div>
+                                     <div class="dashboard-stat"><span class="stat-value" id="report-overdue-kpi">0</span> Tasks Overdue</div>
+                                     <div class="dashboard-stat"><span class="stat-value" id="report-risks-kpi">0</span> High-Impact Risks</div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="determinants" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Determinants</h4>
+                            <p>Define and provide details about key implementation determinants at each level.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="determinants-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No determinants have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="determinants-container">Add Determinant</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="strategies" class="content-section">
+                 <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
+                <div class="content-card">
+                                 <div class="planning-module">
+                                <div class="planning-module-header">
+                                    <h4>Strategies</h4>
+                                    <p>Use the Expert Recommendations for Implementation Change (ERIC) compilation to plan the specific strategies for implementing the EBP.</p>
+                                </div>
+                                <div class="planning-module-content">
+                                    <div id="strategies-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No strategies have been added.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="strategies-container">Add Strategy</button></div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+            <div id="mechanisms" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Mechanisms</h4>
+                            <p>Describe the processes or events through which implementation strategies operate to affect desired outcomes.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="mechanisms-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No mechanisms have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="mechanisms-container">Add Mechanism</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="outcomes" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
+                <div class="content-card">
+                             <div class="planning-module">
+                                <div class="planning-module-header">
+                                    <h4>Outcomes</h4>
+                                    <p>Use Proctor's Outcomes for Implementation Research to conceptualize the effects of new treatments, practices, and services on implementation, service, and client outcomes.</p>
+                                </div>
+                                <div class="planning-module-content">
+                                    <h5>Implementation Outcomes</h5>
+                                    <div id="implementation-outcomes-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No implementation outcomes have been added.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="implementation-outcomes-container">Add Outcome</button></div>
+                                    <hr>
+                                    <h5>Service Outcomes</h5>
+                                    <div id="service-outcomes-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No service outcomes have been added.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="service-outcomes-container">Add Outcome</button></div>
+                                    <hr>
+                                    <h5>Client Outcomes</h5>
+                                    <div id="client-outcomes-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No client outcomes have been added.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="client-outcomes-container">Add Outcome</button></div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+             <div id="protocol" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Protocol</h4>
+                            <p>List the specific activities, tasks, events, and milestones in the implementation effort.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="timeline-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No protocol activities have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="timeline-container">New Activity</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="fidelity" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Fidelity</h4>
+                            <p>Specify the core components of the EBP and how to measure if they are delivered as intended.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="fidelity-plan-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No fidelity components have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="fidelity-plan-container">Add component</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="instruments" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Measurement Instruments</h4>
+                            <p>Log the specific instruments used for data collection in this project.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="instruments-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No instruments have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="instruments-container">Add Instrument</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div id="adaptations" class="content-section">
+                 <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
+                     <div class="content-card">
+                             <div class="planning-module">
+                                <div class="planning-module-header">
+                                    <h4>Adaptations</h4>
+                                    <p>Use this adaptation log to keep track of modifications to strategies or the EBP.</p>
+                                </div>
+                                <div class="planning-module-content">
+                                    <div id="adaptations-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No adaptations have been logged.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="adaptations-container">Log Adaptation</button></div>
+                                </div>
+                            </div>
+                    </div>
+            </div>
+            <div id="risks" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
+                <div class="content-card">
+                             <div class="planning-module">
+                                <div class="planning-module-header">
+                                    <h4>Risks</h4>
+                                    <p>Identify potential risks to the implementation effort and plan how to address them.</p>
+                                </div>
+                                <div class="planning-module-content">
+                                    <div id="risks-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No risks have been logged.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="risks-container">Log Risk</button></div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+            <div id="opportunities" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
+                <div class="content-card">
+                             <div class="planning-module">
+                                <div class="planning-module-header">
+                                    <h4>Opportunities</h4>
+                                    <p>Identify potential opportunities that could benefit the project.</p>
+                                </div>
+                                <div class="planning-module-content">
+                                    <div id="opportunities-container" class="expandable-rows-container">
+                                        <div class="no-data-message" style="display: none;">No opportunities have been logged.</div>
+                                    </div>
+                                    <div class="table-actions"><button class="add-row-btn" data-table="opportunities-container">Log Opportunity</button></div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+            <div id="summary" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="report-landing">← Back to Report</a>
+                <div class="content-card">
+                    <h3 id="summary-report-title">Implementation Report</h3>
+                    
+                    <div class="summary-section">
+                        <h4>Primary Goal</h4>
+                        <div id="summary-goal-container">
+                            <p id="summary-goal-text">No goal has been defined yet.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="summary-irlm-module" class="summary-section planning-module">
+                     </div>
+
+                    <div class="summary-section planning-module">
+                        <div class="planning-module-content">
+                            <div class="task-filter-controls">
+                                <input type="text" id="task-search-input" placeholder="Search by task name...">
+                                <select id="task-status-filter">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <table id="interactive-task-table">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable-th" data-sort-key="task">Task</th>
+                                        <th class="sortable-th" data-sort-key="owner">Owner</th>
+                                        <th class="sortable-th" data-sort-key="end">Due Date</th>
+                                        <th class="sortable-th" data-sort-key="status">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="no-data-row" style="display: none;"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="planning-module summary-section">
+                        <div class="planning-module-header">
+                            <h4>Performance Dashboard</h4>
+                            <p>An overview of key performance indicators and project progress.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="report-kpi-container">
+                                <div class="kpi-grid">
+                                 </div>
+                            </div>
+                             <div class="chart-card progress-card" style="grid-column: 1 / -1; margin-top: 2rem;">
+                                 <h5>Activities Progress</h5>
+                                <div id="progress-bar-container" class="progress-bar-container"></div>
+                                <div id="progress-bar-legend" class="progress-bar-legend"></div>
+                            </div>
+                             <div class="chart-card" style="grid-column: 1 / -1; margin-top: 2rem;">
+                                <div class="combined-chart-grid">
+                                    <div>
+                                        <h5>Risk Matrix</h5>
+                                        <div class="chart-wrapper"><canvas id="risk-bubble-chart"></canvas></div>
+                                    </div>
+                                    <div>
+                                        <h5>Opportunity Matrix</h5>
+                                        <div class="chart-wrapper"><canvas id="opportunities-chart"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="planning-summary-container">
+                        </div>
+                </div>
+            </div>
+
+            <div id="glossary" class="content-section">
+                <div class="content-card">
+                    <h3>Glossary of Terms</h3>
+                    <input type="text" id="glossary-search" placeholder="Search for a term..." style="margin-bottom: 1.5rem;">
+                    <div id="glossary-container">
+                        </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <template id="team-members-table-template">
+        <tr>
+            <td data-label="Name"><input type="text" data-field="name" placeholder="Full Name"></td>
+            <td data-label="Role"><input type="text" data-field="role" placeholder="e.g., Project Lead"></td>
+            <td><button class="delete-btn">&times;</button></td>
+        </tr>
+    </template>
+
+    <template id="determinants-container-template">
+        <div class="expandable-card">
+            <div class="expandable-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                     <input type="text" data-field="determinant" placeholder="Describe the determinant (e.g., Lack of clinician training)" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                <div class="form-group"><label>Context Level</label><select data-field="context"></select></div>
+                <div class="form-group full-width"><label>Notes</label><textarea data-field="notes" placeholder="e.g., Why is this determinant relevant? How was it identified?"></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="mechanisms-container-template">
+     <div class="expandable-card">
+            <div class="expandable-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                    <input type="text" data-field="mechanism" placeholder="Name the mechanism of action (e.g., Increased Self-Efficacy)" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                 <div class="form-group full-width"><label>Description</label><textarea data-field="description" placeholder="Describe how this mechanism works to influence outcomes."></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="strategies-container-template">
+        <div class="expandable-card">
+            <div class="expandable-card-header">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="strategy" placeholder="Search for the ERIC Strategy..." class="header-input strategy-search-input">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                 <div class="form-group full-width">
+                    <label>Strategy Definition</label>
+                    <p class="strategy-definition-display">Select a strategy to see its definition.</p>
+                </div>
+                <div class="form-group full-width"><label>Determinant(s) Addressed</label><textarea data-field="determinants" placeholder="List determinants, each with a context level in parentheses, e.g., Staff knowledge gaps (Inner Setting)"></textarea></div>
+                <div class="form-group full-width"><label>Mechanism of Action</label><textarea data-field="mechanism" placeholder="Explain the processes or events through which the implementation strategy operates to affect desired implementation outcomes."></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="risks-container-template">
+        <div class="expandable-row" data-type="risks">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="risk" placeholder="Briefly describe potential risk... e.g., 'evaluation funding may decrease in FY26'" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group"><label>Date</label><input type="date" data-field="start"></div>
+                <div class="form-group"><label>Likelihood</label><select data-field="likelihood"></select></div>
+                <div class="form-group"><label>Impact</label><select data-field="impact"></select></div>
+                <div class="form-group"><label>Est. Cost ($)</label><input type="number" data-field="cost" placeholder="e.g., 5000"></div>
+                <div class="form-group full-width"><label>Mitigation Strategy</label><textarea data-field="mitigation" placeholder="Mitigation strategy"></textarea></div>
+                <div class="form-group full-width"><label>Notes</label><textarea data-field="notes" placeholder="e.g., How did the risk emerge? How did team member(s) identify it as a risk?"></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="opportunities-container-template">
+        <div class="expandable-row" data-type="opportunities">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="opportunity" placeholder="Briefly describe emergent opportunity... e.g., 'partner with a local community center'" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group"><label>Date</label><input type="date" data-field="start"></div>
+                <div class="form-group"><label>Benefit</label><select data-field="benefit"></select></div>
+                <div class="form-group"><label>Feasibility</label><select data-field="feasibility"></select></div>
+                <div class="form-group"><label>Total Individuals Affected</label><input type="number" data-field="affected" placeholder="e.g., 500"></div>
+                <div class="form-group full-width"><label>Action/Notes</label><textarea data-field="notes" placeholder="e.g., How did the opportunity emerge? How did team member(s) identify it as an opportunity?"></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="timeline-container-template">
+        <div class="expandable-row" data-type="timeline">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="task" placeholder="Briefly describe the task, milestone, or opportunity... e.g., 'finalize training materials'" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group"><label>Start</label><input type="date" data-field="start"></div>
+                <div class="form-group"><label>End</label><input type="date" data-field="end"></div>
+                <div class="form-group">
+                    <label>Owner</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="owner" class="owner-search-input" placeholder="Search for team member...">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <div class="form-group"><label>Status</label><select data-field="status"></select></div>
+                <div class="form-group"><label>% Complete</label><input type="number" data-field="progress" placeholder="%"></div>
+                <div class="form-group full-width"><label>Notes</label><textarea data-field="notes" placeholder="e.g., Related objective, key metric, link to data source"></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="implementation-outcomes-container-template">
+        <div class="expandable-card">
+            <div class="expandable-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="outcome" placeholder="Search Proctor's implementation outcomes..." class="header-input outcome-search-input">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                <div class="form-group full-width">
+                    <label>Outcome Definition</label>
+                    <p class="outcome-definition-display">Select an outcome to see its definition.</p>
+                </div>
+                <div class="form-group full-width"><label>Metric & Target</label><input type="text" data-field="metric" placeholder="e.g., >80% score on the Acceptability of Intervention Measure (AIM)"></div>
+                 <div class="form-group"><label>Stakeholder</label><input type="text" data-field="stakeholder" placeholder="e.g., Providers, Clients"></div>
+                <div class="form-group"><label>Data Source</label><input type="text" data-field="source" placeholder="e.g., Staff Survey"></div>
+                <div class="form-group">
+                    <label>Owner</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="owner" class="owner-search-input" placeholder="Search for team member...">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <div class="form-group"><label>Target Date</label><input type="date" data-field="date"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="service-outcomes-container-template">
+        <div class="expandable-card">
+            <div class="expandable-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="outcome" placeholder="Search Proctor's service outcomes..." class="header-input outcome-search-input">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                <div class="form-group full-width">
+                    <label>Outcome Definition</label>
+                    <p class="outcome-definition-display">Select an outcome to see its definition.</p>
+                </div>
+                <div class="form-group full-width"><label>Metric / Indicator</label><input type="text" data-field="metric" placeholder="e.g., Average wait time from check-in to appointment"></div>
+                <div class="form-group"><label>Data Source</label><input type="text" data-field="source" placeholder="e.g., EHR, Patient Records"></div>
+                <div class="form-group"><label>Benchmark / Target</label><input type="text" data-field="target" placeholder="e.g., < 15 minutes"></div>
+                <div class="form-group"><label>Reporting Frequency</label><input type="text" data-field="frequency" placeholder="e.g., Monthly, Quarterly"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="client-outcomes-container-template">
+        <div class="expandable-card">
+            <div class="expandable-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-card-title">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" data-field="outcome" placeholder="Search Proctor's client outcomes..." class="header-input outcome-search-input">
+                        <div class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-card-body">
+                <div class="form-group full-width">
+                    <label>Outcome Definition</label>
+                    <p class="outcome-definition-display">Select an outcome to see its definition.</p>
+                </div>
+                <div class="form-group full-width"><label>Metric / Instrument</label><input type="text" data-field="metric" placeholder="e.g., PHQ-9, GAD-7, Client Satisfaction Survey"></div>
+                <div class="form-group"><label>Target Population</label><input type="text" data-field="population" placeholder="e.g., All clinic patients"></div>
+                <div class="form-group"><label>Target Change</label><input type="text" data-field="target" placeholder="e.g., 50% reduction in score"></div>
+                <div class="form-group"><label>Data Collection Point(s)</label><input type="text" data-field="collection_points" placeholder="e.g., Baseline, 3 months, 6 months"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="fidelity-plan-container-template">
+        <div class="expandable-row" data-type="fidelity">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="component" placeholder="Core Component (e.g., Daily Mindfulness)" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group full-width"><label>Core Function</label><input type="text" data-field="function" placeholder="e.g., To improve focus"></div>
+                <div class="form-group"><label>Fidelity Dimension</label><select data-field="dimension"></select></div>
+                <div class="form-group"><label>Measurement Method</label><input type="text" data-field="method" placeholder="e.g., Checklist"></div>
+                <div class="form-group"><label>Target</label><input type="text" data-field="target" placeholder="e.g., >90% of steps"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="instruments-container-template">
+        <div class="expandable-row" data-type="instruments">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="instrument" placeholder="Instrument Name (e.g., Patient Health Questionnaire-9)" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group"><label>Construct Measured</label><input type="text" data-field="construct" placeholder="e.g., Depression Symptoms, Acceptability"></div>
+                <div class="form-group"><label>Source / Link</label><input type="text" data-field="source" placeholder="Link to instrument or citation"></div>
+                <div class="form-group full-width"><label>Administration Notes</label><textarea data-field="notes" placeholder="Notes on scoring, administration frequency, target population, etc."></textarea></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="adaptations-container-template">
+        <div class="expandable-row" data-type="adaptations">
+            <div class="expandable-row-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <div class="expandable-row-title">
+                    <input type="text" data-field="modification" placeholder="Briefly describe modification... e.g., 'combined modules 11 & 12 for timing'" class="header-input">
+                </div>
+                <button class="delete-btn">&times;</button>
+            </div>
+            <div class="expandable-row-details">
+                <div class="form-group"><label>Date</label><input type="date" data-field="date"></div>
+                <div class="form-group"><label>What was modified?</label><select data-field="component" class="core-component-dropdown"></select></div>
+                <div class="form-group"><label>Nature of Change</label><select data-field="nature"></select></div>
+                <div class="form-group"><label>Goal</label><select data-field="goal"></select></div>
+                <div class="form-group"><label>Planned?</label><select data-field="planned"></select></div>
+                <div class="form-group"><label>Who was involved?</label><input type="text" data-field="decisionMakers" placeholder="e.g., Project Team, Leadership"></div>
+                <div class="form-group full-width">
+                    <label>Notes</label>
+                    <textarea data-field="decisionRationale" placeholder="e.g., How was the decision was made to modify? Were there any challenges? If so, How were they resolved?"></textarea>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script type="module" src="script.js"></script>
+</body>
+</html>
