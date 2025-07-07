@@ -114,7 +114,7 @@
       { "name": "Symptomatology", "definition": "The effect of a service on a client's symptoms and signs of illness." }
     ]
   }
-}{
+{
   "options": {
     "status": ["Not Started", "Waiting", "In Progress", "At Risk", "Complete"],
     "level": ["Low", "Medium", "High"],
