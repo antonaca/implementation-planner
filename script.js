@@ -3,6 +3,26 @@
  * Contains all necessary functions for the app to run.
  * Uses Local Storage for data persistence.
  */
+function handleNavigation(e, link) {
+    e.preventDefault();
+    const targetId = link.getAttribute('data-target');
+    if (!targetId) return;
+
+    // Remove .active from all nav links
+    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+    // Add .active to the clicked link
+    link.classList.add('active');
+
+    // Show the correct content section
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.style.display = (section.id === targetId) ? '' : 'none';
+    });
+
+    // Optionally: call any update functions
+    if (targetId.endsWith('-landing')) updateLandingPageDashboards?.();
+    if (targetId === 'summary') updateReportVisuals?.();
+    if (targetId === 'glossary') populateGlossary?.();
+}
 document.addEventListener('DOMContentLoaded', function() {
     // #region STATE AND INITIALIZATION
     const state = {
