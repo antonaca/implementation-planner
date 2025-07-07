@@ -1,3 +1,8 @@
+/**
+ * COMPLETE AND FINAL SCRIPT
+ * This file contains all necessary functions to run the Implementation Planner.
+ * It uses the browser's Local Storage for data persistence and does not use Firebase.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     // #region STATE AND INITIALIZATION
     const state = {
@@ -119,7 +124,78 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // #endregion
 
-    // #region UI AND ROW MANAGEMENT
+    // #region UI AND HELPER FUNCTIONS
+    function updateSidebarTitle() {
+        const projectNameInput = document.getElementById('project-name');
+        const sidebarTitle = document.getElementById('sidebar-title');
+        if (projectNameInput && sidebarTitle) {
+            sidebarTitle.textContent = projectNameInput.value.trim() || 'New Project';
+        }
+    }
+
+    function handleNavigation(e, link) {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+        link.classList.add('active');
+        const topLevelLi = link.closest('.sidebar-nav > li');
+        if (topLevelLi) {
+            topLevelLi.querySelector('a').classList.add('active');
+        }
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.toggle('active', section.id === targetId);
+        });
+        if (targetId.endsWith('-landing')) updateLandingPageDashboards();
+        if (targetId === 'summary') updateReportVisuals();
+        if (targetId === 'glossary') populateGlossary();
+    }
+    
+    function populateGlossary() {
+        const glossaryContainer = document.getElementById('glossary-container');
+        if (!glossaryContainer || glossaryContainer.children.length > 0 || !appData.ericStrategies) return;
+        const glossaryData = {
+            "Implementation Strategies": {
+                "Expert Recommendations for Implementing Change (ERIC)": appData.ericStrategies
+            },
+            "Implementation Outcomes": {
+                "Proctor's Outcome Taxonomy: Implementation": appData.allOutcomesData["Implementation Outcomes"],
+                "Proctor's Outcome Taxonomy: Service": appData.allOutcomesData["Service Outcomes"],
+                "Proctor's Outcome Taxonomy: Client": appData.allOutcomesData["Client Outcomes"]
+            }
+        };
+        glossaryContainer.innerHTML = ''; // Clear previous content
+        Object.entries(glossaryData).forEach(([mainCategory, subCategories]) => {
+            const mainHeader = document.createElement('h4');
+            mainHeader.className = 'glossary-main-category';
+            mainHeader.textContent = mainCategory;
+            glossaryContainer.appendChild(mainHeader);
+            Object.entries(subCategories).forEach(([subCategory, terms]) => {
+                const subHeader = document.createElement('h5');
+                subHeader.className = 'glossary-sub-category';
+                subHeader.textContent = subCategory;
+                glossaryContainer.appendChild(subHeader);
+                const grid = document.createElement('div');
+                grid.className = 'glossary-grid';
+                terms.sort((a, b) => a.name.localeCompare(b.name)).forEach(term => {
+                    const card = document.createElement('div');
+                    card.className = 'glossary-card';
+                    card.innerHTML = `<div class="glossary-term">${term.name}</div><div class="glossary-definition">${term.definition}</div>`;
+                    grid.appendChild(card);
+                });
+                glossaryContainer.appendChild(grid);
+            });
+        });
+        const searchInput = document.getElementById('glossary-search');
+        searchInput.addEventListener('input', () => {
+            const filter = searchInput.value.toUpperCase();
+            glossaryContainer.querySelectorAll('.glossary-card').forEach(card => {
+                const termText = card.querySelector('.glossary-term').textContent.toUpperCase();
+                const definitionText = card.querySelector('.glossary-definition').textContent.toUpperCase();
+                card.style.display = (termText.includes(filter) || definitionText.includes(filter)) ? "" : "none";
+            });
+        });
+    }
+
     function addRow(containerId, data = {}) {
         const isTable = containerId === 'team-members-table';
         const templateId = `${containerId}-template`;
@@ -155,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'client-outcomes-container': 'Client Outcomes'
         }[containerId];
 
-        if (containerId === 'strategies-container') {
+        if (containerId === 'strategies-container' && appData.ericStrategies) {
             const updateDef = name => { newRowElement.querySelector('.strategy-definition-display').textContent = appData.ericStrategies.find(s => s.name === name)?.definition || 'Select a strategy.'; };
             initializeAutocomplete(newRowElement.querySelector('.strategy-search-input'), newRowElement.querySelector('.autocomplete-results'), appData.ericStrategies, updateDef);
             if (data.strategy) updateDef(data.strategy);
@@ -269,17 +345,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         backFace.innerHTML = content;
     }
+    
+    function updateTeamMembersState() {
+        state.teamMembers = Array.from(document.querySelectorAll('#team-members-table tbody tr:not(.no-data-row)'))
+            .map(row => ({ name: row.querySelector('[data-field="name"]').value.trim() }))
+            .filter(member => member.name);
+    }
+
+    function updateCoreComponentsState() {
+        state.coreComponents = Array.from(document.querySelectorAll('#fidelity-plan-container .expandable-row'))
+            .map(row => row.querySelector('[data-field="component"]').value.trim())
+            .filter(Boolean);
+        updateAdaptationCoreComponentDropdowns();
+    }
+    
+    function updateAdaptationCoreComponentDropdowns() {
+        document.querySelectorAll('select.core-component-dropdown').forEach(select => {
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Select Component</option>';
+            const strategyOption = new Option("Implementation Strategy", "Implementation Strategy");
+            if ("Implementation Strategy" === currentValue) strategyOption.selected = true;
+            select.appendChild(strategyOption);
+            state.coreComponents.forEach(name => {
+                const option = new Option(name, name);
+                if (name === currentValue) option.selected = true;
+                select.appendChild(option);
+            });
+        });
+    }
     // #endregion
 
     // #region DASHBOARDS AND CHARTS
-    function updateSidebarTitle() {
-        const projectNameInput = document.getElementById('project-name');
-        const sidebarTitle = document.getElementById('sidebar-title');
-        if (projectNameInput && sidebarTitle) {
-            sidebarTitle.textContent = projectNameInput.value.trim() || 'New Project';
-        }
-    }
-
     function createOrUpdateChart(chartId, config) {
         if (chartInstances[chartId]) chartInstances[chartId].destroy();
         const ctx = document.getElementById(chartId)?.getContext('2d');
@@ -375,165 +471,4 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.raw.label } } },
                 scales: {
                     x: { title: { display: true, text: 'Likelihood', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } },
-                    y: { title: { display: true, text: 'Impact', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } }
-                }
-            }
-        });
-    }
-
-    function updateOpportunitiesChart() {
-        const levelMap = { "low": 1, "medium": 2, "high": 3 };
-        const oppData = getTableData('opportunities-container').map(d => ({
-            x: levelMap[d.feasibility?.toLowerCase()] || 0,
-            y: levelMap[d.benefit?.toLowerCase()] || 0,
-            r: 4 + ((parseInt(d.affected, 10) || 0) / 100),
-            label: d.opportunity || 'Unnamed Opp'
-        }));
-        createOrUpdateChart('opportunities-chart', {
-            type: 'bubble',
-            data: { datasets: [{ label: 'Opportunities', data: oppData, backgroundColor: 'rgba(40, 167, 69, 0.7)' }] },
-            options: {
-                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.raw.label } } },
-                scales: {
-                    x: { title: { display: true, text: 'Feasibility', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } },
-                    y: { title: { display: true, text: 'Benefit', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } }
-                }
-            }
-        });
-    }
-
-    function updateKpiCards() {
-        const timelineTasks = getTableData('timeline-container');
-        const totalProgress = timelineTasks.reduce((sum, task) => sum + (parseInt(task.progress, 10) || 0), 0);
-        const overallProgress = timelineTasks.length > 0 ? Math.round(totalProgress / timelineTasks.length) : 0;
-        const today = new Date(); today.setHours(0, 0, 0, 0);
-        const overdueTasks = timelineTasks.filter(task => task.end && new Date(task.end) < today && task.status !== 'Complete');
-        const highImpactRisks = getTableData('risks-container').filter(risk => risk.impact === 'High');
-        const kpis = [
-            { title: 'Overall Progress', value: `${overallProgress}%` },
-            { title: 'Tasks Overdue', value: overdueTasks.length, color: overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)' },
-            { title: 'High-Impact Risks', value: highImpactRisks.length },
-            { title: 'Team Members', value: state.teamMembers.length }
-        ];
-        const kpiGrid = document.querySelector('#report-kpi-container .kpi-grid');
-        kpiGrid.innerHTML = kpis.map(kpi => `
-            <div class="kpi-card">
-                <div class="kpi-info">
-                    <div class="kpi-title">${kpi.title}</div>
-                    <div class="kpi-value" style="${kpi.color ? `color: ${kpi.color};` : ''}">${kpi.value}</div>
-                </div>
-            </div>`).join('');
-    }
-
-    function updateProjectSummary() {
-        const goalText = document.getElementById('primary-goal').value.trim();
-        document.getElementById('summary-goal-text').textContent = goalText || 'No goal has been defined yet.';
-        const projectName = document.getElementById('project-name').value.trim();
-        document.getElementById('summary-report-title').textContent = projectName ? `${projectName} - Implementation Report` : 'Implementation Report';
-        initializeTaskTable();
-    }
-
-    function initializeTaskTable() {
-        const searchInput = document.getElementById('task-search-input');
-        const statusFilter = document.getElementById('task-status-filter');
-        statusFilter.innerHTML = '<option value="">All Statuses</option>';
-        if (appData.options) {
-            appData.options.status.forEach(status => statusFilter.add(new Option(status, status)));
-        }
-        searchInput.addEventListener('input', renderInteractiveTaskTable);
-        statusFilter.addEventListener('change', renderInteractiveTaskTable);
-        document.querySelectorAll('#interactive-task-table .sortable-th').forEach(th => {
-            th.addEventListener('click', () => {
-                const key = th.dataset.sortKey;
-                if (state.sortState.key === key) {
-                    state.sortState.direction = state.sortState.direction === 'asc' ? 'desc' : 'asc';
-                } else {
-                    state.sortState.key = key;
-                    state.sortState.direction = 'asc';
-                }
-                renderInteractiveTaskTable();
-            });
-        });
-        renderInteractiveTaskTable();
-    }
-
-    function renderInteractiveTaskTable() {
-        const tableBody = document.querySelector('#interactive-task-table tbody');
-        const allTasks = getTableData('timeline-container');
-        const searchTerm = document.getElementById('task-search-input').value.toLowerCase();
-        const statusFilter = document.getElementById('task-status-filter').value;
-        const filteredTasks = allTasks.filter(task =>
-            (task.task || '').toLowerCase().includes(searchTerm) && (!statusFilter || task.status === statusFilter)
-        );
-        const sortedTasks = [...filteredTasks].sort((a, b) => {
-            const key = state.sortState.key;
-            const dir = state.sortState.direction === 'asc' ? 1 : -1;
-            const valA = (a[key] || '').toLowerCase();
-            const valB = (b[key] || '').toLowerCase();
-            if (valA > valB) return 1 * dir;
-            if (valA < valB) return -1 * dir;
-            return 0;
-        });
-        document.querySelectorAll('#interactive-task-table .sortable-th').forEach(th => {
-            th.classList.remove('sorted-asc', 'sorted-desc');
-            if (th.dataset.sortKey === state.sortState.key) {
-                th.classList.add(state.sortState.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
-            }
-        });
-        tableBody.innerHTML = '';
-        if (sortedTasks.length === 0) {
-            tableBody.innerHTML = `<tr class="no-data-row"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr>`;
-        } else {
-            sortedTasks.forEach(task => {
-                const row = tableBody.insertRow();
-                row.innerHTML = `<td>${task.task || 'N/A'}</td><td>${task.owner || 'Unassigned'}</td><td>${task.end || 'N/A'}</td><td>${task.status || 'N/A'}</td>`;
-            });
-        }
-    }
-    // #endregion
-
-    // #region EVENT LISTENERS
-    document.body.addEventListener('click', e => {
-        const navLink = e.target.closest('.nav-link');
-        if (navLink) handleNavigation(e, navLink);
-
-        if (e.target.matches('.add-row-btn')) { addRow(e.target.dataset.table); }
-        if (e.target.matches('.delete-btn')) {
-            const row = e.target.closest('tr, .expandable-row, .expandable-card');
-            if (row) {
-                const container = row.parentElement;
-                const containerId = container.id || (container.tagName === 'TBODY' ? container.parentElement.id : null);
-                row.remove();
-                if (containerId) {
-                    if (containerId === 'team-members-table') updateTeamMembersState();
-                    if (containerId === 'fidelity-plan-container') updateCoreComponentsState();
-                    updateEmptyState(containerId);
-                    triggerSave();
-                }
-            }
-        }
-        if (e.target.closest('.expandable-row-header, .expandable-card-header') && !e.target.closest('button, a, input, select, .autocomplete-wrapper')) {
-            e.target.closest('.expandable-row, .expandable-card').classList.toggle('expanded');
-        }
-    });
-
-    document.body.addEventListener('input', e => {
-        const target = e.target;
-        if (target.closest('.content-section')) {
-            if (target.matches('[data-field="name"]')) updateTeamMembersState();
-            if (target.matches('[data-field="component"]')) updateCoreComponentsState();
-            if (target.id === 'project-name') updateSidebarTitle();
-            triggerSave();
-        }
-    });
-
-    document.body.addEventListener('change', e => {
-        if (e.target.tagName === 'SELECT' && e.target.closest('.content-section')) {
-            triggerSave();
-        }
-    });
-    // #endregion
-
-    // --- Start The Application ---
-    initializeApp();
-});
+                    y: { title: { display: true, text: 'Impact', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High
