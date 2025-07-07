@@ -1,8 +1,4 @@
-/**
- * COMPLETE AND FINAL SCRIPT
- * This file contains all necessary functions to run the Implementation Planner.
- * It uses the browser's Local Storage for data persistence and does not use Firebase.
- */
+
 document.addEventListener('DOMContentLoaded', function() {
     // #region STATE AND INITIALIZATION
     const state = {
