@@ -1,5 +1,5 @@
 /**
- * COMPLETE AND FINAL SCRIPT (UPDATED FOR DROPDOWNS)
+ * COMPLETE AND FINAL SCRIPT (UPDATED)
  * This file contains all necessary functions to run the Implementation Planner.
  * It uses the browser's Local Storage for data persistence and does not use Firebase.
  */
@@ -398,7 +398,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // #endregion
 
-    // ... (rest of dashboards, charts, and event listeners unchanged)
+    // #region DASHBOARDS AND CHARTS
+    // ... (no change in the rest of your DASHBOARDS AND CHARTS code)
+    // #endregion
 
     // #region EVENT LISTENERS
     document.body.addEventListener('click', e => {
