@@ -88,6 +88,7 @@
     { "name": "Visit other sites", "definition": "Visit sites where a similar implementation effort has been considered successful." },
     { "name": "Work with educational institutions", "definition": "Encourage educational institutions to train clinicians in the innovation." }
   ],
+},
   "allOutcomesData": {
     "Implementation Outcomes": [
       { "name": "Acceptability", "definition": "The perception among implementation stakeholders that a given treatment, service, practice, or innovation is agreeable, palatable, or satisfactory." },
