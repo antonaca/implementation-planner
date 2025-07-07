@@ -456,7 +456,59 @@ document.addEventListener('DOMContentLoaded', function() {
             if (emptyElem) emptyElem.style.display = count === 0 ? '' : 'none';
         });
     }
-
+function updateIRLMFrontCards() {
+    // Determinants
+    {
+        const card = document.querySelector('.irlm-card-front[data-module="determinants"]');
+        const data = getTableData('determinants-container').filter(item => item.determinant && item.determinant.trim() !== '');
+        const countElem = card.querySelector('.irlm-card-count');
+        const lastLabelElem = card.querySelector('.irlm-card-last-label');
+        const emptyElem = card.querySelector('.irlm-card-empty');
+        countElem.textContent = data.length;
+        lastLabelElem.textContent = data.length > 0 ? data[data.length - 1].determinant : '';
+        emptyElem.style.display = data.length === 0 ? '' : 'none';
+    }
+    // Strategies
+    {
+        const card = document.querySelector('.irlm-card-front[data-module="strategies"]');
+        const data = getTableData('strategies-container').filter(item => item.strategy && item.strategy.trim() !== '');
+        const countElem = card.querySelector('.irlm-card-count');
+        const lastLabelElem = card.querySelector('.irlm-card-last-label');
+        const emptyElem = card.querySelector('.irlm-card-empty');
+        countElem.textContent = data.length;
+        lastLabelElem.textContent = data.length > 0 ? data[data.length - 1].strategy : '';
+        emptyElem.style.display = data.length === 0 ? '' : 'none';
+    }
+    // Mechanisms
+    {
+        const card = document.querySelector('.irlm-card-front[data-module="mechanisms"]');
+        const data = getTableData('mechanisms-container').filter(item => item.mechanism && item.mechanism.trim() !== '');
+        const countElem = card.querySelector('.irlm-card-count');
+        const lastLabelElem = card.querySelector('.irlm-card-last-label');
+        const emptyElem = card.querySelector('.irlm-card-empty');
+        countElem.textContent = data.length;
+        lastLabelElem.textContent = data.length > 0 ? data[data.length - 1].mechanism : '';
+        emptyElem.style.display = data.length === 0 ? '' : 'none';
+    }
+    // Outcomes (sum all 3)
+    {
+        const card = document.querySelector('.irlm-card-front[data-module="outcomes"]');
+        const dataImpl = getTableData('implementation-outcomes-container').filter(item => item.outcome && item.outcome.trim() !== '');
+        const dataServ = getTableData('service-outcomes-container').filter(item => item.outcome && item.outcome.trim() !== '');
+        const dataClient = getTableData('client-outcomes-container').filter(item => item.outcome && item.outcome.trim() !== '');
+        card.querySelector('#implementation-outcomes-count').textContent = dataImpl.length;
+        card.querySelector('#service-outcomes-count').textContent = dataServ.length;
+        card.querySelector('#client-outcomes-count').textContent = dataClient.length;
+        const emptyElem = card.querySelector('.irlm-card-empty');
+        emptyElem.style.display = (dataImpl.length + dataServ.length + dataClient.length === 0) ? '' : 'none';
+        // Optionally, show last label (most recent of all 3)
+        let lastLabel = '';
+        if (dataClient.length > 0) lastLabel = dataClient[dataClient.length - 1].outcome;
+        else if (dataServ.length > 0) lastLabel = dataServ[dataServ.length - 1].outcome;
+        else if (dataImpl.length > 0) lastLabel = dataImpl[dataImpl.length - 1].outcome;
+        card.querySelector('.irlm-card-last-label').textContent = lastLabel;
+    }
+}
     function updateTeamMembersState() {
         // Only count team members with a non-empty name
         state.teamMembers = Array.from(document.querySelectorAll('#team-members-table tbody tr:not(.no-data-row)'))
