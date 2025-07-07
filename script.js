@@ -471,4 +471,166 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.raw.label } } },
                 scales: {
                     x: { title: { display: true, text: 'Likelihood', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } },
-                    y: { title: { display: true, text: 'Impact', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High
+                    y: { title: { display: true, text: 'Impact', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } }
+                }
+            }
+        });
+    }
+
+    function updateOpportunitiesChart() {
+        const levelMap = { "low": 1, "medium": 2, "high": 3 };
+        const oppData = getTableData('opportunities-container').map(d => ({
+            x: levelMap[d.feasibility?.toLowerCase()] || 0,
+            y: levelMap[d.benefit?.toLowerCase()] || 0,
+            r: 4 + ((parseInt(d.affected, 10) || 0) / 100),
+            label: d.opportunity || 'Unnamed Opp'
+        }));
+        createOrUpdateChart('opportunities-chart', {
+            type: 'bubble',
+            data: { datasets: [{ label: 'Opportunities', data: oppData, backgroundColor: 'rgba(40, 167, 69, 0.7)' }] },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.raw.label } } },
+                scales: {
+                    x: { title: { display: true, text: 'Feasibility', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } },
+                    y: { title: { display: true, text: 'Benefit', font: { weight: '600' } }, min: 0, max: 4, ticks: { stepSize: 1, callback: (v) => ['','Low','Medium','High'][v] || '' } }
+                }
+            }
+        });
+    }
+
+    function updateKpiCards() {
+        const timelineTasks = getTableData('timeline-container');
+        const totalProgress = timelineTasks.reduce((sum, task) => sum + (parseInt(task.progress, 10) || 0), 0);
+        const overallProgress = timelineTasks.length > 0 ? Math.round(totalProgress / timelineTasks.length) : 0;
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const overdueTasks = timelineTasks.filter(task => task.end && new Date(task.end) < today && task.status !== 'Complete');
+        const highImpactRisks = getTableData('risks-container').filter(risk => risk.impact === 'High');
+        const kpis = [
+            { title: 'Overall Progress', value: `${overallProgress}%` },
+            { title: 'Tasks Overdue', value: overdueTasks.length, color: overdueTasks.length > 0 ? 'var(--red)' : 'var(--green)' },
+            { title: 'High-Impact Risks', value: highImpactRisks.length },
+            { title: 'Team Members', value: state.teamMembers.length }
+        ];
+        const kpiGrid = document.querySelector('#report-kpi-container .kpi-grid');
+        kpiGrid.innerHTML = kpis.map(kpi => `
+            <div class="kpi-card">
+                <div class="kpi-info">
+                    <div class="kpi-title">${kpi.title}</div>
+                    <div class="kpi-value" style="${kpi.color ? `color: ${kpi.color};` : ''}">${kpi.value}</div>
+                </div>
+            </div>`).join('');
+    }
+
+    function updateProjectSummary() {
+        const goalText = document.getElementById('primary-goal').value.trim();
+        document.getElementById('summary-goal-text').textContent = goalText || 'No goal has been defined yet.';
+        const projectName = document.getElementById('project-name').value.trim();
+        document.getElementById('summary-report-title').textContent = projectName ? `${projectName} - Implementation Report` : 'Implementation Report';
+        initializeTaskTable();
+    }
+
+    function initializeTaskTable() {
+        const searchInput = document.getElementById('task-search-input');
+        const statusFilter = document.getElementById('task-status-filter');
+        statusFilter.innerHTML = '<option value="">All Statuses</option>';
+        if (appData.options && appData.options.status) {
+            appData.options.status.forEach(status => statusFilter.add(new Option(status, status)));
+        }
+        searchInput.addEventListener('input', renderInteractiveTaskTable);
+        statusFilter.addEventListener('change', renderInteractiveTaskTable);
+        document.querySelectorAll('#interactive-task-table .sortable-th').forEach(th => {
+            th.addEventListener('click', () => {
+                const key = th.dataset.sortKey;
+                if (state.sortState.key === key) {
+                    state.sortState.direction = state.sortState.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    state.sortState.key = key;
+                    state.sortState.direction = 'asc';
+                }
+                renderInteractiveTaskTable();
+            });
+        });
+        renderInteractiveTaskTable();
+    }
+
+    function renderInteractiveTaskTable() {
+        const tableBody = document.querySelector('#interactive-task-table tbody');
+        if (!tableBody) return;
+        const allTasks = getTableData('timeline-container');
+        const searchTerm = document.getElementById('task-search-input').value.toLowerCase();
+        const statusFilter = document.getElementById('task-status-filter').value;
+        const filteredTasks = allTasks.filter(task =>
+            (task.task || '').toLowerCase().includes(searchTerm) && (!statusFilter || task.status === statusFilter)
+        );
+        const sortedTasks = [...filteredTasks].sort((a, b) => {
+            const key = state.sortState.key;
+            const dir = state.sortState.direction === 'asc' ? 1 : -1;
+            const valA = (a[key] || '').toLowerCase();
+            const valB = (b[key] || '').toLowerCase();
+            if (valA > valB) return 1 * dir;
+            if (valA < valB) return -1 * dir;
+            return 0;
+        });
+        document.querySelectorAll('#interactive-task-table .sortable-th').forEach(th => {
+            th.classList.remove('sorted-asc', 'sorted-desc');
+            if (th.dataset.sortKey === state.sortState.key) {
+                th.classList.add(state.sortState.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+            }
+        });
+        tableBody.innerHTML = '';
+        if (sortedTasks.length === 0) {
+            tableBody.innerHTML = `<tr class="no-data-row"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr>`;
+        } else {
+            sortedTasks.forEach(task => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `<td>${task.task || 'N/A'}</td><td>${task.owner || 'Unassigned'}</td><td>${task.end || 'N/A'}</td><td>${task.status || 'N/A'}</td>`;
+            });
+        }
+    }
+    // #endregion
+
+    // #region EVENT LISTENERS
+    document.body.addEventListener('click', e => {
+        const navLink = e.target.closest('.nav-link');
+        if (navLink) handleNavigation(e, navLink);
+
+        if (e.target.matches('.add-row-btn')) { addRow(e.target.dataset.table); }
+        if (e.target.matches('.delete-btn')) {
+            const row = e.target.closest('tr, .expandable-row, .expandable-card');
+            if (row) {
+                const container = row.parentElement;
+                const containerId = container.id || (container.tagName === 'TBODY' ? container.parentElement.id : null);
+                row.remove();
+                if (containerId) {
+                    if (containerId === 'team-members-table') updateTeamMembersState();
+                    if (containerId === 'fidelity-plan-container') updateCoreComponentsState();
+                    updateEmptyState(containerId);
+                    triggerSave();
+                }
+            }
+        }
+        if (e.target.closest('.expandable-row-header, .expandable-card-header') && !e.target.closest('button, a, input, select, .autocomplete-wrapper')) {
+            e.target.closest('.expandable-row, .expandable-card').classList.toggle('expanded');
+        }
+    });
+
+    document.body.addEventListener('input', e => {
+        const target = e.target;
+        if (target.closest('.content-section')) {
+            if (target.matches('[data-field="name"]')) updateTeamMembersState();
+            if (target.matches('[data-field="component"]')) updateCoreComponentsState();
+            if (target.id === 'project-name') updateSidebarTitle();
+            triggerSave();
+        }
+    });
+
+    document.body.addEventListener('change', e => {
+        if (e.target.tagName === 'SELECT' && e.target.closest('.content-section')) {
+            triggerSave();
+        }
+    });
+    // #endregion
+
+    // --- Start The Application ---
+    initializeApp();
+});
