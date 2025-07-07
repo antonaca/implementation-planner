@@ -7,7 +7,7 @@
     "adaptationNature": ["Tailoring", "Adding", "Removing", "Shortening", "Lengthening", "Substituting", "Reordering"],
     "adaptationGoal": ["Increase Reach", "Improve Fit", "Decrease Costs", "Improve Effectiveness"],
     "adaptationPlanned": ["Planned/Proactive", "Planned/Reactive", "Unplanned/Reactive"],
-    "contextLevels": ["Inner Setting", "Outer Setting", "Innovation Characteristics", "Characteristics of Individuals"]
+    "contextLevels": ["Inner Setting", "Outer Setting", "Innovation", "Characteristics of Individuals"]
   },
   "ericStrategies": [
     { "name": "Access new funding", "definition": "Access new or existing money to facilitate the implementation." },
