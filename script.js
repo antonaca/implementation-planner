@@ -375,12 +375,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .filter(member => member.name);
     }
 
-    function updateCoreComponentsState() {
-        state.coreComponents = Array.from(document.querySelectorAll('#fidelity-plan-container .expandable-row'))
-            .map(row => row.querySelector('[data-field="component"]').value.trim())
-            .filter(Boolean);
-        updateAdaptationCoreComponentDropdowns();
-    }
+function updateCoreComponentsState() {
+    state.coreComponents = Array.from(document.querySelectorAll('#fidelity-plan-container .expandable-row'))
+        .map(row => {
+            const input = row.querySelector('[data-field="component"]');
+            return input ? input.value.trim() : '';
+        })
+        .filter(Boolean);
+    updateAdaptationCoreComponentDropdowns();
+}
     
     function updateAdaptationCoreComponentDropdowns() {
         document.querySelectorAll('select.core-component-dropdown').forEach(select => {
