@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // State and instance management
+    // Application state and chart instances
     const state = {
         teamMembers: [],
         coreComponents: [],
@@ -7,48 +7,61 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     let chartInstances = {};
     let saveTimeout;
-    let appData = {}; // This will hold the data from data.json
+    let appData = {}; // This will hold all data from data.json
 
-    // --- Core Functions ---
+    // --- Core Application Logic ---
 
-    // Fetches the external JSON data and then initializes the application
+    /**
+     * Fetches the data from data.json and starts the application.
+     * This is the main entry point.
+     */
     async function initializeApp() {
         try {
             const response = await fetch('data.json');
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Network response was not ok: ${response.statusText}`);
             }
             appData = await response.json();
-            console.log("App data loaded successfully.");
-            loadPlan(); // Load user data from Local Storage and populate the UI
+            console.log("App data from data.json loaded successfully.");
+            
+            // Now that we have appData, we can load the user's plan and build the UI
+            loadPlan();
         } catch (error) {
             console.error("Fatal Error: Could not load data.json.", error);
-            alert("Could not load essential app data (data.json). The app cannot function. Please check the browser's console for more details.");
+            alert("Could not load essential app data (data.json). The app cannot function. Please check the file exists and the path is correct.");
         }
     }
 
-    // --- Data Persistence (Local Storage) ---
+    // --- Data Persistence using Browser Local Storage ---
 
+    /**
+     * Gathers all user-entered data from the page.
+     * @returns {object} An object containing all the plan data.
+     */
     function getPlanData() {
         const data = { simpleInputs: {}, tables: {} };
         document.querySelectorAll('.saveable').forEach(input => {
             if (input.id) data.simpleInputs[input.id] = input.value;
         });
+        
         const allTableIds = [
             'team-members-table', 'determinants-container', 'strategies-container', 'mechanisms-container',
             'risks-container', 'opportunities-container', 'timeline-container',
             'implementation-outcomes-container', 'service-outcomes-container', 'client-outcomes-container',
             'fidelity-plan-container', 'adaptations-container', 'instruments-container'
         ];
+
         allTableIds.forEach(id => {
-            const container = document.getElementById(id);
-            if (container) {
-                 data.tables[id] = getTableData(id);
+            if (document.getElementById(id)) {
+                data.tables[id] = getTableData(id);
             }
         });
         return data;
     }
 
+    /**
+     * Saves the current plan data to the browser's local storage.
+     */
     function savePlan() {
         try {
             localStorage.setItem('implementationPlanData', JSON.stringify(getPlanData()));
@@ -57,9 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Error saving to Local Storage: ", error);
         }
     }
-    
+
+    /**
+     * Loads the plan data from local storage and populates the entire application.
+     */
     function loadPlan() {
-        // Clear all dynamic containers first
+        // Clear all dynamic containers before loading
         const allContainerSelectors = [
             '#team-members-table tbody', '#determinants-container', '#strategies-container', '#mechanisms-container',
             '#risks-container', '#opportunities-container', '#timeline-container',
@@ -72,9 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const savedData = localStorage.getItem('implementationPlanData');
+        
         if (savedData) {
             console.log("Loading plan from Local Storage.");
             const planData = JSON.parse(savedData);
+            
             if (planData.simpleInputs) {
                 Object.keys(planData.simpleInputs).forEach(id => {
                     const input = document.getElementById(id);
@@ -91,70 +109,35 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("No saved plan found. Initializing new template.");
         }
         
-        // Final UI updates after loading
-        allContainerSelectors.forEach(selector => updateEmptyState(document.querySelector(selector)?.id || selector.replace('#', '')));
+        // Final UI updates after loading everything
+        allContainerSelectors.forEach(selector => updateEmptyState(selector.replace('#', '').split(' ')[0]));
         updateSidebarTitle();
         updateLandingPageDashboards();
         updateReportVisuals();
         populateGlossary();
     }
 
+    /**
+     * Debounces the save function to avoid saving on every single keystroke.
+     */
     function triggerSave() {
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(() => {
             savePlan();
-            // Refresh dashboards after saving
+            // Also refresh dashboards after saving
             const activeTab = document.querySelector('.nav-link.active')?.dataset.target;
-            if (activeTab === 'summary') updateReportVisuals();
-            else if (activeTab?.endsWith('-landing')) updateLandingPageDashboards();
+            if (activeTab === 'summary') {
+                updateReportVisuals();
+            } else if (activeTab?.endsWith('-landing')) {
+                updateLandingPageDashboards();
+            }
         }, 1000);
     }
     
-    // (The rest of the functions: addRow, populateSelect, navigation, chart updates, etc. should be here)
-    // NOTE: All other JavaScript functions from the previous step's script go here. They don't need to change.
-    // For brevity, they are not repeated. Just ensure this top section replaces the old one.
+    // --- NOTE: All other functions from the original script should be placed here ---
+    // (e.g., populateGlossary, handleNavigation, updateLandingPageDashboards, etc.)
+    // For brevity, only the core logic is shown. Ensure all your other functions are present.
 
-
-    // --- Event Listeners and Initialization ---
-    
-    // Global click handler for dynamic elements
-    document.body.addEventListener('click', e => {
-        if (e.target.matches('.add-row-btn')) {
-            addRow(e.target.dataset.table);
-        } else if (e.target.matches('.delete-btn')) {
-            const row = e.target.closest('tr, .expandable-row, .expandable-card');
-            if (row) {
-                const container = row.parentElement;
-                const containerId = container.id || (container.tagName === 'TBODY' ? container.parentElement.id : null);
-                row.remove();
-                if (containerId) {
-                    if (containerId === 'team-members-table') updateTeamMembersState();
-                    if (containerId === 'fidelity-plan-container') updateCoreComponentsState();
-                    updateEmptyState(containerId);
-                    triggerSave();
-                }
-            }
-        } else if (e.target.closest('.expandable-row-header, .expandable-card-header')) {
-            if (!e.target.matches('input, button, select, a, .delete-btn, .autocomplete-wrapper *')) {
-                 e.target.closest('.expandable-row, .expandable-card').classList.toggle('expanded');
-            }
-        }
-    });
-
-    // Global input handler to trigger auto-save
-    document.body.addEventListener('input', e => {
-        if (e.target.closest('.content-section')) {
-            if (e.target.matches('[data-field="name"]')) updateTeamMembersState();
-            if (e.target.matches('[data-field="component"]')) updateCoreComponentsState();
-            triggerSave();
-        }
-    });
-    
-    // Handles selects and date pickers
-    document.body.addEventListener('change', e => {
-        if (e.target.closest('.content-section')) triggerSave();
-    });
-
-    // START THE APP
-    initializeApp(); 
+    // --- Start the Application ---
+    initializeApp();
 });
