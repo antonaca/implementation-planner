@@ -110,73 +110,92 @@
                 </div>
             </div>
 
-            <div id="model-landing" class="content-section">
-                <h3>Implementation Research Logic Model (IRLM)</h3>
-                <div class="horizontal-scroll-container">
-                    <div class="module-front-matter" data-module="determinants">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Determinants</h4></div>
-                                <div class="module-summary">
-                                     The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="determinants-count">0</span> Identified</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
+<div id="model-landing" class="content-section">
+    <h3>Implementation Research Logic Model (IRLM)</h3>
+    <div class="horizontal-scroll-container">
+        <div class="module-front-matter irlm-card-front" data-module="determinants">
+            <div class="card-flipper">
+                <div class="card-face card-face-front">
+                    <div class="module-header"><h4>Determinants</h4></div>
+                    <div class="module-summary">
+                        The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
                     </div>
-                    <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter" data-module="strategies">
-                         <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Strategies</h4></div>
-                                <div class="module-summary">
-                                     The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
-                                </div>
-                                <div class="module-dashboard">
-                                     <div class="dashboard-stat"><span class="stat-value" id="strategies-count">0</span> Selected</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
+                    <div class="module-dashboard">
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="determinants-count">0</span> Identified
+                            <span class="irlm-card-empty" style="display:none;">No determinants yet</span>
                         </div>
-                    </div>
-                     <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter" data-module="mechanisms">
-                         <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Mechanisms</h4></div>
-                                <div class="module-summary">
-                                    Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
-                                </div>
-                                 <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="mechanisms-count">0</span> Hypothesized</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                     <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter" data-module="outcomes">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Outcomes</h4></div>
-                                <div class="module-summary">
-                                    <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
-                                </div>
-                                 <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="implementation-outcomes-count">0</span> Implementation</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="service-outcomes-count">0</span> Service</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="client-outcomes-count">0</span> Client</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
+                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
                     </div>
                 </div>
+                <div class="card-face card-face-back"></div>
             </div>
-
+        </div>
+        <div class="irlm-landing-arrow">→</div>
+        <div class="module-front-matter irlm-card-front" data-module="strategies">
+            <div class="card-flipper">
+                <div class="card-face card-face-front">
+                    <div class="module-header"><h4>Strategies</h4></div>
+                    <div class="module-summary">
+                        The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
+                    </div>
+                    <div class="module-dashboard">
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="strategies-count">0</span> Selected
+                            <span class="irlm-card-empty" style="display:none;">No strategies yet</span>
+                        </div>
+                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                    </div>
+                </div>
+                <div class="card-face card-face-back"></div>
+            </div>
+        </div>
+        <div class="irlm-landing-arrow">→</div>
+        <div class="module-front-matter irlm-card-front" data-module="mechanisms">
+            <div class="card-flipper">
+                <div class="card-face card-face-front">
+                    <div class="module-header"><h4>Mechanisms</h4></div>
+                    <div class="module-summary">
+                        Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
+                    </div>
+                    <div class="module-dashboard">
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="mechanisms-count">0</span> Hypothesized
+                            <span class="irlm-card-empty" style="display:none;">No mechanisms yet</span>
+                        </div>
+                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                    </div>
+                </div>
+                <div class="card-face card-face-back"></div>
+            </div>
+        </div>
+        <div class="irlm-landing-arrow">→</div>
+        <div class="module-front-matter irlm-card-front" data-module="outcomes">
+            <div class="card-flipper">
+                <div class="card-face card-face-front">
+                    <div class="module-header"><h4>Outcomes</h4></div>
+                    <div class="module-summary">
+                        <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
+                    </div>
+                    <div class="module-dashboard">
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="implementation-outcomes-count">0</span> Implementation
+                        </div>
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="service-outcomes-count">0</span> Service
+                        </div>
+                        <div class="dashboard-stat">
+                            <span class="stat-value irlm-card-count" id="client-outcomes-count">0</span> Client
+                        </div>
+                        <span class="irlm-card-empty" style="display:none;">No outcomes yet</span>
+                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                    </div>
+                </div>
+                <div class="card-face card-face-back"></div>
+            </div>
+        </div>
+    </div>
+</div>
             <div id="plan-landing" class="content-section">
                 <h3>Implementation Plan</h3>
                 <div class="landing-page-grid">
