@@ -87,7 +87,7 @@
     { "name": "Use train-the-trainer strategies", "definition": "Train designated clinicians or organizations to train others in the clinical innovation." },
     { "name": "Visit other sites", "definition": "Visit sites where a similar implementation effort has been considered successful." },
     { "name": "Work with educational institutions", "definition": "Encourage educational institutions to train clinicians in the innovation." }
-  ],
+  ]
 },
   "allOutcomesData": {
     "Implementation Outcomes": [
