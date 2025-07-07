@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Could not load essential app data (data.json). The app cannot function.");
         }
     }
+        function initializeFlippableCards() {
+        document.querySelectorAll('.module-front-matter').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('a, button')) return;
+                const flipper = card.querySelector('.card-flipper');
+                if (flipper) {
+                    flipper.classList.toggle('is-flipped');
+                    if (flipper.classList.contains('is-flipped')) populateCardBack(card);
+                }
+            });
+        });
+    }
     // #endregion
 
     // #region DATA PERSISTENCE (LOCAL STORAGE)
@@ -131,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
         populateGlossary();
         initializeFlippableCards();
     }
+    
 
     function triggerSave() {
         clearTimeout(saveTimeout);
@@ -324,19 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (e.key === 'Enter') { e.preventDefault(); if (activeIndex > -1) items[activeIndex].dispatchEvent(new Event('mousedown')); } 
             else if (e.key === 'Escape') { resultsContainer.classList.remove('active'); }
             items.forEach((item, index) => item.classList.toggle('selected', index === activeIndex));
-        });
-    }
-
-    function initializeFlippableCards() {
-        document.querySelectorAll('.module-front-matter').forEach(card => {
-            card.addEventListener('click', (e) => {
-                if (e.target.closest('a, button')) return;
-                const flipper = card.querySelector('.card-flipper');
-                if (flipper) {
-                    flipper.classList.toggle('is-flipped');
-                    if (flipper.classList.contains('is-flipped')) populateCardBack(card);
-                }
-            });
         });
     }
 
