@@ -113,7 +113,7 @@
       { "name": "Function", "definition": "The impact of a service on a client's ability to perform daily activities and roles." },
       { "name": "Symptomatology", "definition": "The effect of a service on a client's symptoms and signs of illness." }
     ]
-  }
+}
 {
   "options": {
     "status": ["Not Started", "Waiting", "In Progress", "At Risk", "Complete"],
