@@ -1,5 +1,5 @@
 /**
- * COMPLETE AND FINAL SCRIPT (REVISED FOR EMPTY ROW & KPI COUNT HANDLING)
+ * COMPLETE AND FINAL SCRIPT (REVISED FOR EMPTY ROW & KPI COUNT HANDLING, IRLM CARDS TOO)
  * This file contains all necessary functions to run the Implementation Planner.
  * It uses the browser's Local Storage for data persistence and does not use Firebase.
  */
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // #region DATA PERSISTENCE (LOCAL STORAGE)
     function getTableData(id) {
-        // Only return rows with at least one non-empty data value (prevents empty rows counting in KPIs)
+        // Only return rows with at least one non-empty data value (prevents empty rows counting in KPIs and cards)
         const container = document.getElementById(id);
         if (!container) return [];
         const isTable = container.tagName === 'TABLE';
@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateReportVisuals();
         populateGlossary();
         initializeFlippableCards();
+        updateIRLMFrontCards();
     }
 
     function triggerSave() {
@@ -124,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const activeTab = document.querySelector('.nav-link.active')?.dataset.target;
             if (activeTab === 'summary') updateReportVisuals();
             else if (activeTab?.endsWith('-landing')) updateLandingPageDashboards();
+            updateIRLMFrontCards();
         }, 1000);
     }
     // #endregion
@@ -152,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetId.endsWith('-landing')) updateLandingPageDashboards();
         if (targetId === 'summary') updateReportVisuals();
         if (targetId === 'glossary') populateGlossary();
+        updateIRLMFrontCards();
     }
     
     function populateGlossary() {
@@ -247,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         container.appendChild(newRowElement);
         updateEmptyState(isTable ? container.parentElement.id : containerId);
+        updateIRLMFrontCards();
     }
 
     function updateEmptyState(containerId) {
@@ -356,7 +360,103 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         backFace.innerHTML = content;
     }
-    
+
+    // IRLM front-facing cards logic (exclude empty rows!)
+    function updateIRLMFrontCards() {
+        // Uses .irlm-card-front and data-module for each card, similar logic as card backs
+        document.querySelectorAll('.irlm-card-front').forEach(card => {
+            const module = card.dataset.module;
+            let count = 0;
+            let lastLabel = '';
+            switch (module) {
+                case 'determinants':
+                    {
+                        const data = getTableData('determinants-container').filter(item => item.determinant && item.determinant.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].determinant : '';
+                    }
+                    break;
+                case 'strategies':
+                    {
+                        const data = getTableData('strategies-container').filter(item => item.strategy && item.strategy.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].strategy : '';
+                    }
+                    break;
+                case 'mechanisms':
+                    {
+                        const data = getTableData('mechanisms-container').filter(item => item.mechanism && item.mechanism.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].mechanism : '';
+                    }
+                    break;
+                case 'outcomes':
+                    {
+                        const data = [
+                            ...getTableData('implementation-outcomes-container'),
+                            ...getTableData('service-outcomes-container'),
+                            ...getTableData('client-outcomes-container')
+                        ].filter(item => item.outcome && item.outcome.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].outcome : '';
+                    }
+                    break;
+                case 'protocol':
+                    {
+                        const data = getTableData('timeline-container').filter(item => item.task && item.task.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].task : '';
+                    }
+                    break;
+                case 'fidelity':
+                    {
+                        const data = getTableData('fidelity-plan-container').filter(item => item.component && item.component.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].component : '';
+                    }
+                    break;
+                case 'instruments':
+                    {
+                        const data = getTableData('instruments-container').filter(item => item.instrument && item.instrument.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].instrument : '';
+                    }
+                    break;
+                case 'adaptations':
+                    {
+                        const data = getTableData('adaptations-container').filter(item => item.modification && item.modification.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].modification : '';
+                    }
+                    break;
+                case 'risks':
+                    {
+                        const data = getTableData('risks-container').filter(item => item.risk && item.risk.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].risk : '';
+                    }
+                    break;
+                case 'opportunities':
+                    {
+                        const data = getTableData('opportunities-container').filter(item => item.opportunity && item.opportunity.trim() !== '');
+                        count = data.length;
+                        lastLabel = data.length > 0 ? data[data.length - 1].opportunity : '';
+                    }
+                    break;
+                default:
+                    count = 0;
+            }
+            // Update count and last label (if present) on the card
+            const countElem = card.querySelector('.irlm-card-count');
+            const lastLabelElem = card.querySelector('.irlm-card-last-label');
+            if (countElem) countElem.textContent = count;
+            if (lastLabelElem) lastLabelElem.textContent = lastLabel || '';
+            // Optionally show/hide an empty state (if you have such element)
+            const emptyElem = card.querySelector('.irlm-card-empty');
+            if (emptyElem) emptyElem.style.display = count === 0 ? '' : 'none';
+        });
+    }
+
     function updateTeamMembersState() {
         // Only count team members with a non-empty name
         state.teamMembers = Array.from(document.querySelectorAll('#team-members-table tbody tr:not(.no-data-row)'))
@@ -429,6 +529,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ...rest of dashboards, charts, and event listeners remain the same as before...
+
+    // #region EVENT LISTENERS
+    document.body.addEventListener('click', e => {
+        const navLink = e.target.closest('.nav-link');
+        if (navLink) handleNavigation(e, navLink);
+
+        if (e.target.matches('.add-row-btn')) { addRow(e.target.dataset.table); }
+        if (e.target.matches('.delete-btn')) {
+            const row = e.target.closest('tr, .expandable-row, .expandable-card');
+            if (row) {
+                const container = row.parentElement;
+                const containerId = container.id || (container.tagName === 'TBODY' ? container.parentElement.id : null);
+                row.remove();
+                if (containerId) {
+                    if (containerId === 'team-members-table') updateTeamMembersState();
+                    if (containerId === 'fidelity-plan-container') updateCoreComponentsState();
+                    updateEmptyState(containerId);
+                    triggerSave();
+                }
+            }
+        }
+        if (e.target.closest('.expandable-row-header, .expandable-card-header') && !e.target.closest('button, a, input, select, .autocomplete-wrapper')) {
+            e.target.closest('.expandable-row, .expandable-card').classList.toggle('expanded');
+        }
+    });
+
+    document.body.addEventListener('input', e => {
+        const target = e.target;
+        if (target.closest('.content-section')) {
+            if (target.matches('[data-field="name"]')) updateTeamMembersState();
+            if (target.matches('[data-field="component"]')) updateCoreComponentsState();
+            if (target.id === 'project-name') updateSidebarTitle();
+            triggerSave();
+        }
+    });
+
+    document.body.addEventListener('change', e => {
+        if (e.target.tagName === 'SELECT' && e.target.closest('.content-section')) {
+            triggerSave();
+        }
+    });
+    // #endregion
 
     // --- Start The Application ---
     initializeApp();
