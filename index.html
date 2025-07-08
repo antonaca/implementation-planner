@@ -28,7 +28,7 @@
                 </li>
                 <li>
                     <a href="#" class="nav-link" data-target="model-landing">
-                         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 01-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 013.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 013.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 01-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 18l-1.035.259a3.375 3.375 0 00-2.456 2.456L18 21.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 18l1.035-.259a3.375 3.375 0 002.456-2.456L18 12z" />
                         </svg>
                         Model
@@ -47,7 +47,7 @@
                         </svg>
                         Plan
                     </a>
-                     <ul class="dropdown">
+                    <ul class="dropdown">
                         <li><a href="#" class="nav-link" data-target="protocol">Protocol</a></li>
                         <li><a href="#" class="nav-link" data-target="fidelity">Fidelity</a></li>
                         <li><a href="#" class="nav-link" data-target="instruments">Instruments</a></li>
@@ -97,7 +97,7 @@
                         <label for="ebp">Evidence-Based Practice (EBP) or Initiative:</label>
                         <textarea id="ebp" class="saveable" placeholder="Describe the core intervention or practice being implemented."></textarea>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label>Team & Roles:</label>
                         <table id="team-members-table">
                             <thead><tr><th style="width: 40%;">Name</th><th style="width: 55%;">Role / Responsibilities</th><th style="width: 5%;"></th></tr></thead>
@@ -110,92 +110,93 @@
                 </div>
             </div>
 
-<div id="model-landing" class="content-section">
-    <h3>Implementation Research Logic Model (IRLM)</h3>
-    <div class="horizontal-scroll-container">
-        <div class="module-front-matter irlm-card-front" data-module="determinants">
-            <div class="card-flipper">
-                <div class="card-face card-face-front">
-                    <div class="module-header"><h4>Determinants</h4></div>
-                    <div class="module-summary">
-                        The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
-                    </div>
-                    <div class="module-dashboard">
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="determinants-count">0</span> Identified
-                            <span class="irlm-card-empty" style="display:none;">No determinants yet</span>
+            <div id="model-landing" class="content-section">
+                <h3>Implementation Research Logic Model (IRLM)</h3>
+                <div class="horizontal-scroll-container">
+                    <div class="module-front-matter irlm-card-front" data-module="determinants">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Determinants</h4></div>
+                                <div class="module-summary">
+                                    The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="determinants-count">0</span> Identified
+                                        <span class="irlm-card-empty" style="display:none;">No determinants yet</span>
+                                    </div>
+                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
                         </div>
-                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                    </div>
+                    <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter irlm-card-front" data-module="strategies">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Strategies</h4></div>
+                                <div class="module-summary">
+                                    The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="strategies-count">0</span> Selected
+                                        <span class="irlm-card-empty" style="display:none;">No strategies yet</span>
+                                    </div>
+                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter irlm-card-front" data-module="mechanisms">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Mechanisms</h4></div>
+                                <div class="module-summary">
+                                    Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="mechanisms-count">0</span> Hypothesized
+                                        <span class="irlm-card-empty" style="display:none;">No mechanisms yet</span>
+                                    </div>
+                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
+                    </div>
+                    <div class="irlm-landing-arrow">→</div>
+                    <div class="module-front-matter irlm-card-front" data-module="outcomes">
+                        <div class="card-flipper">
+                            <div class="card-face card-face-front">
+                                <div class="module-header"><h4>Outcomes</h4></div>
+                                <div class="module-summary">
+                                    <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
+                                </div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="implementation-outcomes-count">0</span> Implementation
+                                    </div>
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="service-outcomes-count">0</span> Service
+                                    </div>
+                                    <div class="dashboard-stat">
+                                        <span class="stat-value irlm-card-count" id="client-outcomes-count">0</span> Client
+                                    </div>
+                                    <span class="irlm-card-empty" style="display:none;">No outcomes yet</span>
+                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
+                                </div>
+                            </div>
+                            <div class="card-face card-face-back"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="card-face card-face-back"></div>
             </div>
-        </div>
-        <div class="irlm-landing-arrow">→</div>
-        <div class="module-front-matter irlm-card-front" data-module="strategies">
-            <div class="card-flipper">
-                <div class="card-face card-face-front">
-                    <div class="module-header"><h4>Strategies</h4></div>
-                    <div class="module-summary">
-                        The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
-                    </div>
-                    <div class="module-dashboard">
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="strategies-count">0</span> Selected
-                            <span class="irlm-card-empty" style="display:none;">No strategies yet</span>
-                        </div>
-                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                    </div>
-                </div>
-                <div class="card-face card-face-back"></div>
-            </div>
-        </div>
-        <div class="irlm-landing-arrow">→</div>
-        <div class="module-front-matter irlm-card-front" data-module="mechanisms">
-            <div class="card-flipper">
-                <div class="card-face card-face-front">
-                    <div class="module-header"><h4>Mechanisms</h4></div>
-                    <div class="module-summary">
-                        Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
-                    </div>
-                    <div class="module-dashboard">
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="mechanisms-count">0</span> Hypothesized
-                            <span class="irlm-card-empty" style="display:none;">No mechanisms yet</span>
-                        </div>
-                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                    </div>
-                </div>
-                <div class="card-face card-face-back"></div>
-            </div>
-        </div>
-        <div class="irlm-landing-arrow">→</div>
-        <div class="module-front-matter irlm-card-front" data-module="outcomes">
-            <div class="card-flipper">
-                <div class="card-face card-face-front">
-                    <div class="module-header"><h4>Outcomes</h4></div>
-                    <div class="module-summary">
-                        <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
-                    </div>
-                    <div class="module-dashboard">
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="implementation-outcomes-count">0</span> Implementation
-                        </div>
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="service-outcomes-count">0</span> Service
-                        </div>
-                        <div class="dashboard-stat">
-                            <span class="stat-value irlm-card-count" id="client-outcomes-count">0</span> Client
-                        </div>
-                        <span class="irlm-card-empty" style="display:none;">No outcomes yet</span>
-                        <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                    </div>
-                </div>
-                <div class="card-face card-face-back"></div>
-            </div>
-        </div>
-    </div>
-</div>
+
             <div id="plan-landing" class="content-section">
                 <h3>Implementation Plan</h3>
                 <div class="landing-page-grid">
@@ -204,12 +205,12 @@
                             <div class="card-face card-face-front">
                                 <div class="module-header"><h4>Protocol</h4></div>
                                 <div class="module-summary">
-                                     The <b>protocol</b> translates implementation strategies into structured, measurable processes that capture all of the activities, tasks, events, and milestones, with responsible owners and deadlines to ensure accountability and track progress.
+                                    The <b>protocol</b> translates implementation strategies into structured, measurable processes that capture all of the activities, tasks, events, and milestones, with responsible owners and deadlines to ensure accountability and track progress.
                                 </div>
                                 <div class="module-dashboard">
-                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-count">0</span> Tasks</div>
-                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-overdue-count">0</span> Overdue</div>
-                                     <div class="dashboard-stat"><span class="stat-value" id="tasks-complete-count">0</span> Complete</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-count">0</span> Tasks</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-overdue-count">0</span> Overdue</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-complete-count">0</span> Complete</div>
                                 </div>
                             </div>
                             <div class="card-face card-face-back"></div>
@@ -222,7 +223,7 @@
                                 <div class="module-summary">
                                     <b>Fidelity</b> refers to how closely implementation adheres to the original, evidence-based protocol. Specify the EBP's <i>core components</i> (the essential, non-negotiable elements) and plan how to measure them.
                                 </div>
-                                 <div class="module-dashboard">
+                                <div class="module-dashboard">
                                     <div class="dashboard-stat"><span class="stat-value" id="fidelity-components-count">0</span> Core Components</div>
                                 </div>
                             </div>
@@ -236,7 +237,7 @@
                                 <div class="module-summary">
                                     Document the specific <b>instruments</b> (e.g., surveys, checklists, interview guides) used to measure outcomes, fidelity, and other key constructs throughout the implementation project.
                                 </div>
-                                 <div class="module-dashboard">
+                                <div class="module-dashboard">
                                     <div class="dashboard-stat"><span class="stat-value" id="instruments-count">0</span> Logged</div>
                                 </div>
                             </div>
@@ -254,7 +255,7 @@
                             <div class="card-face card-face-front">
                                 <div class="module-header"><h4>Adaptations</h4></div>
                                 <div class="module-summary">
-                                     The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).
+                                    The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).
                                 </div>
                                 <div class="module-dashboard">
                                     <div class="dashboard-stat"><span class="stat-value" id="adaptations-count">0</span> Logged</div>
@@ -268,11 +269,11 @@
                             <div class="card-face card-face-front">
                                 <div class="module-header"><h4>Risks</h4></div>
                                 <div class="module-summary">
-                                     A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.
+                                    A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.
                                 </div>
-                                 <div class="module-dashboard">
-                                     <div class="dashboard-stat"><span class="stat-value" id="risks-count">0</span> Logged</div>
-                                     <div class="dashboard-stat"><span class="stat-value" id="high-impact-risks-count">0</span> High Impact</div>
+                                <div class="module-dashboard">
+                                    <div class="dashboard-stat"><span class="stat-value" id="risks-count">0</span> Logged</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="high-impact-risks-count">0</span> High Impact</div>
                                 </div>
                             </div>
                             <div class="card-face card-face-back"></div>
@@ -283,9 +284,9 @@
                             <div class="card-face card-face-front">
                                 <div class="module-header"><h4>Opportunities</h4></div>
                                 <div class="module-summary">
-                                     A structured log to capture unexpected <b>opportunities</b> to enhance the implementation process or outcomes, including their potential <i>benefit</i> and <i>feasibility</i> to make informed decisions about pursuing them.
+                                    A structured log to capture unexpected <b>opportunities</b> to enhance the implementation process or outcomes, including their potential <i>benefit</i> and <i>feasibility</i> to make informed decisions about pursuing them.
                                 </div>
-                                 <div class="module-dashboard">
+                                <div class="module-dashboard">
                                     <div class="dashboard-stat"><span class="stat-value" id="opportunities-count">0</span> Logged</div>
                                     <div class="dashboard-stat"><span class="stat-value" id="high-benefit-opps-count">0</span> High Benefit</div>
                                 </div>
@@ -297,19 +298,19 @@
             </div>
 
             <div id="report-landing" class="content-section">
-                 <h3>Implementation Report</h3>
-                 <div class="landing-page-grid">
+                <h3>Implementation Report</h3>
+                <div class="landing-page-grid">
                     <div class="module-front-matter" data-module="summary">
                         <div class="card-flipper">
                             <div class="card-face card-face-front">
                                 <div class="module-header"><h4>Summary & Dashboard</h4></div>
                                 <div class="module-summary">
-                                     A comprehensive summary and dynamic performance dashboard. Provides a high-level view of the implementation effort, including progress against the protocol.
+                                    A comprehensive summary and dynamic performance dashboard. Provides a high-level view of the implementation effort, including progress against the protocol.
                                 </div>
                                 <div class="module-dashboard">
-                                     <div class="dashboard-stat"><span class="stat-value" id="report-progress-kpi">0%</span> Progress</div>
-                                     <div class="dashboard-stat"><span class="stat-value" id="report-overdue-kpi">0</span> Tasks Overdue</div>
-                                     <div class="dashboard-stat"><span class="stat-value" id="report-risks-kpi">0</span> High-Impact Risks</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="report-progress-kpi">0%</span> Progress</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="report-overdue-kpi">0</span> Tasks Overdue</div>
+                                    <div class="dashboard-stat"><span class="stat-value" id="report-risks-kpi">0</span> High-Impact Risks</div>
                                 </div>
                             </div>
                             <div class="card-face card-face-back"></div>
@@ -335,23 +336,25 @@
                     </div>
                 </div>
             </div>
+
             <div id="strategies" class="content-section">
-                 <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
+                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
                 <div class="content-card">
-                                 <div class="planning-module">
-                                <div class="planning-module-header">
-                                    <h4>Strategies</h4>
-                                    <p>Use the Expert Recommendations for Implementation Change (ERIC) compilation to plan the specific strategies for implementing the EBP.</p>
-                                </div>
-                                <div class="planning-module-content">
-                                    <div id="strategies-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No strategies have been added.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="strategies-container">Add Strategy</button></div>
-                                </div>
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Strategies</h4>
+                            <p>Use the Expert Recommendations for Implementation Change (ERIC) compilation to plan the specific strategies for implementing the EBP.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="strategies-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No strategies have been added.</div>
                             </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="strategies-container">Add Strategy</button></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div id="mechanisms" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
                 <div class="content-card">
@@ -369,37 +372,39 @@
                     </div>
                 </div>
             </div>
+
             <div id="outcomes" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
                 <div class="content-card">
-                             <div class="planning-module">
-                                <div class="planning-module-header">
-                                    <h4>Outcomes</h4>
-                                    <p>Use Proctor's Outcomes for Implementation Research to conceptualize the effects of new treatments, practices, and services on implementation, service, and client outcomes.</p>
-                                </div>
-                                <div class="planning-module-content">
-                                    <h5>Implementation Outcomes</h5>
-                                    <div id="implementation-outcomes-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No implementation outcomes have been added.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="implementation-outcomes-container">Add Outcome</button></div>
-                                    <hr>
-                                    <h5>Service Outcomes</h5>
-                                    <div id="service-outcomes-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No service outcomes have been added.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="service-outcomes-container">Add Outcome</button></div>
-                                    <hr>
-                                    <h5>Client Outcomes</h5>
-                                    <div id="client-outcomes-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No client outcomes have been added.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="client-outcomes-container">Add Outcome</button></div>
-                                </div>
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Outcomes</h4>
+                            <p>Use Proctor's Outcomes for Implementation Research to conceptualize the effects of new treatments, practices, and services on implementation, service, and client outcomes.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <h5>Implementation Outcomes</h5>
+                            <div id="implementation-outcomes-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No implementation outcomes have been added.</div>
                             </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="implementation-outcomes-container">Add Outcome</button></div>
+                            <hr>
+                            <h5>Service Outcomes</h5>
+                            <div id="service-outcomes-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No service outcomes have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="service-outcomes-container">Add Outcome</button></div>
+                            <hr>
+                            <h5>Client Outcomes</h5>
+                            <div id="client-outcomes-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No client outcomes have been added.</div>
+                            </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="client-outcomes-container">Add Outcome</button></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-             <div id="protocol" class="content-section">
+
+            <div id="protocol" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
                 <div class="content-card">
                     <div class="planning-module">
@@ -416,6 +421,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="fidelity" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
                 <div class="content-card">
@@ -433,6 +439,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="instruments" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
                 <div class="content-card">
@@ -450,72 +457,73 @@
                     </div>
                 </div>
             </div>
-             <div id="adaptations" class="content-section">
-                 <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
-                     <div class="content-card">
-                             <div class="planning-module">
-                                <div class="planning-module-header">
-                                    <h4>Adaptations</h4>
-                                    <p>Use this adaptation log to keep track of modifications to strategies or the EBP.</p>
-                                </div>
-                                <div class="planning-module-content">
-                                    <div id="adaptations-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No adaptations have been logged.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="adaptations-container">Log Adaptation</button></div>
-                                </div>
+
+            <div id="adaptations" class="content-section">
+                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
+                <div class="content-card">
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Adaptations</h4>
+                            <p>Use this adaptation log to keep track of modifications to strategies or the EBP.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="adaptations-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No adaptations have been logged.</div>
                             </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="adaptations-container">Log Adaptation</button></div>
+                        </div>
                     </div>
+                </div>
             </div>
+
             <div id="risks" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
                 <div class="content-card">
-                             <div class="planning-module">
-                                <div class="planning-module-header">
-                                    <h4>Risks</h4>
-                                    <p>Identify potential risks to the implementation effort and plan how to address them.</p>
-                                </div>
-                                <div class="planning-module-content">
-                                    <div id="risks-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No risks have been logged.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="risks-container">Log Risk</button></div>
-                                </div>
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Risks</h4>
+                            <p>Identify potential risks to the implementation effort and plan how to address them.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="risks-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No risks have been logged.</div>
                             </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="risks-container">Log Risk</button></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div id="opportunities" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
                 <div class="content-card">
-                             <div class="planning-module">
-                                <div class="planning-module-header">
-                                    <h4>Opportunities</h4>
-                                    <p>Identify potential opportunities that could benefit the project.</p>
-                                </div>
-                                <div class="planning-module-content">
-                                    <div id="opportunities-container" class="expandable-rows-container">
-                                        <div class="no-data-message" style="display: none;">No opportunities have been logged.</div>
-                                    </div>
-                                    <div class="table-actions"><button class="add-row-btn" data-table="opportunities-container">Log Opportunity</button></div>
-                                </div>
+                    <div class="planning-module">
+                        <div class="planning-module-header">
+                            <h4>Opportunities</h4>
+                            <p>Identify potential opportunities that could benefit the project.</p>
+                        </div>
+                        <div class="planning-module-content">
+                            <div id="opportunities-container" class="expandable-rows-container">
+                                <div class="no-data-message" style="display: none;">No opportunities have been logged.</div>
                             </div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="opportunities-container">Log Opportunity</button></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div id="summary" class="content-section">
                 <a href="#" class="nav-link back-link" data-target="report-landing">← Back to Report</a>
                 <div class="content-card">
                     <h3 id="summary-report-title">Implementation Report</h3>
-                    
                     <div class="summary-section">
                         <h4>Primary Goal</h4>
                         <div id="summary-goal-container">
                             <p id="summary-goal-text">No goal has been defined yet.</p>
                         </div>
                     </div>
-                    
                     <div id="summary-irlm-module" class="summary-section planning-module">
-                     </div>
-
+                    </div>
                     <div class="summary-section planning-module">
                         <div class="planning-module-content">
                             <div class="task-filter-controls">
@@ -539,7 +547,6 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="planning-module summary-section">
                         <div class="planning-module-header">
                             <h4>Performance Dashboard</h4>
@@ -548,14 +555,14 @@
                         <div class="planning-module-content">
                             <div id="report-kpi-container">
                                 <div class="kpi-grid">
-                                 </div>
+                                </div>
                             </div>
-                             <div class="chart-card progress-card" style="grid-column: 1 / -1; margin-top: 2rem;">
-                                 <h5>Activities Progress</h5>
+                            <div class="chart-card progress-card" style="grid-column: 1 / -1; margin-top: 2rem;">
+                                <h5>Activities Progress</h5>
                                 <div id="progress-bar-container" class="progress-bar-container"></div>
                                 <div id="progress-bar-legend" class="progress-bar-legend"></div>
                             </div>
-                             <div class="chart-card" style="grid-column: 1 / -1; margin-top: 2rem;">
+                            <div class="chart-card" style="grid-column: 1 / -1; margin-top: 2rem;">
                                 <div class="combined-chart-grid">
                                     <div>
                                         <h5>Risk Matrix</h5>
@@ -569,9 +576,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div id="planning-summary-container">
-                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -580,7 +586,7 @@
                     <h3>Glossary of Terms</h3>
                     <input type="text" id="glossary-search" placeholder="Search for a term..." style="margin-bottom: 1.5rem;">
                     <div id="glossary-container">
-                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -599,7 +605,7 @@
             <div class="expandable-card-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-card-title">
-                     <input type="text" data-field="determinant" placeholder="Describe the determinant (e.g., Lack of clinician training)" class="header-input">
+                    <input type="text" data-field="determinant" placeholder="Describe the determinant (e.g., Lack of clinician training)" class="header-input">
                 </div>
                 <button class="delete-btn">&times;</button>
             </div>
@@ -611,7 +617,7 @@
     </template>
 
     <template id="mechanisms-container-template">
-     <div class="expandable-card">
+        <div class="expandable-card">
             <div class="expandable-card-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-card-title">
@@ -620,7 +626,7 @@
                 <button class="delete-btn">&times;</button>
             </div>
             <div class="expandable-card-body">
-                 <div class="form-group full-width"><label>Description</label><textarea data-field="description" placeholder="Describe how this mechanism works to influence outcomes."></textarea></div>
+                <div class="form-group full-width"><label>Description</label><textarea data-field="description" placeholder="Describe how this mechanism works to influence outcomes."></textarea></div>
             </div>
         </div>
     </template>
@@ -628,7 +634,7 @@
     <template id="strategies-container-template">
         <div class="expandable-card">
             <div class="expandable-card-header">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-card-title">
                     <div class="autocomplete-wrapper">
                         <input type="text" data-field="strategy" placeholder="Search for the ERIC Strategy..." class="header-input strategy-search-input">
@@ -638,7 +644,7 @@
                 <button class="delete-btn">&times;</button>
             </div>
             <div class="expandable-card-body">
-                 <div class="form-group full-width">
+                <div class="form-group full-width">
                     <label>Strategy Definition</label>
                     <p class="strategy-definition-display">Select a strategy to see its definition.</p>
                 </div>
@@ -731,7 +737,7 @@
                     <p class="outcome-definition-display">Select an outcome to see its definition.</p>
                 </div>
                 <div class="form-group full-width"><label>Metric & Target</label><input type="text" data-field="metric" placeholder="e.g., >80% score on the Acceptability of Intervention Measure (AIM)"></div>
-                 <div class="form-group"><label>Stakeholder</label><input type="text" data-field="stakeholder" placeholder="e.g., Providers, Clients"></div>
+                <div class="form-group"><label>Stakeholder</label><input type="text" data-field="stakeholder" placeholder="e.g., Providers, Clients"></div>
                 <div class="form-group"><label>Data Source</label><input type="text" data-field="source" placeholder="e.g., Staff Survey"></div>
                 <div class="form-group">
                     <label>Owner</label>
@@ -854,6 +860,6 @@
         </div>
     </template>
     
-<script type="module" src="script.js?v=1"></script>
+    <script type="module" src="script.js?v=1"></script>
 </body>
 </html>
