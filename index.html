@@ -1589,12 +1589,12 @@
             let finalTargetId = targetId;
             const pageConfig = state.pageConfig[targetId];
             if (pageConfig && pageConfig.back) {
-                finalTargetId = pageConfig.back;
-            }
-
-            const targetLink = document.querySelector(`.nav-link[data-target="${finalTargetId}"]`);
-            if (targetLink) {
-                targetLink.classList.add('active');
+                // Find the main nav link that corresponds to the landing page
+                const mainNavLink = document.querySelector(`.nav-link[data-target="${pageConfig.back}"]`);
+                if(mainNavLink) mainNavLink.classList.add('active');
+            } else {
+                 const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+                 if (targetLink) targetLink.classList.add('active');
             }
             
             document.querySelectorAll('.content-section').forEach(section => {
@@ -1999,10 +1999,20 @@
                 state.chartInstances[canvasId].destroy();
             }
 
+            // Correctly pluralize the label
+            let pluralLabelKey;
+            if (labelKey.endsWith('y')) {
+                pluralLabelKey = labelKey.slice(0, -1) + 'ies';
+            } else {
+                pluralLabelKey = labelKey + 's';
+            }
+            const finalLabel = pluralLabelKey.charAt(0).toUpperCase() + pluralLabelKey.slice(1);
+
+
             const levelMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
             const chartData = {
                 datasets: [{
-                    label: labelKey.charAt(0).toUpperCase() + labelKey.slice(1) + 's',
+                    label: finalLabel, // Use the correctly pluralized label
                     data: data.map(item => ({
                         x: levelMap[item[xKey.toLowerCase()]] || 0,
                         y: levelMap[item[yKey.toLowerCase()]] || 0,
