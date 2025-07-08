@@ -1659,13 +1659,33 @@
         }
 
         function addRow(containerId, data = {}) {
+            const containerKeyMap = {
+                'determinants-container': 'determinant', 'strategies-container': 'strategy', 'mechanisms-container': 'mechanism',
+                'implementation-outcomes-container': 'outcome', 'service-outcomes-container': 'outcome', 'client-outcomes-container': 'outcome',
+                'timeline-container': 'task', 'fidelity-plan-container': 'component', 'instruments-container': 'instrument',
+                'adaptations-container': 'modification', 'risks-container': 'risk', 'opportunities-container': 'opportunity', 'team-members-table': 'name'
+            };
+
+            const keyField = containerKeyMap[containerId];
+            const container = document.getElementById(containerId);
+            const rowSelector = container.tagName === 'TABLE' ? 'tbody tr' : '.expandable-row, .expandable-card';
+            
+            if (keyField) {
+                const rows = container.querySelectorAll(rowSelector);
+                for (const row of rows) {
+                    const input = row.querySelector(`[data-field="${keyField}"]`);
+                    if (input && !input.value.trim()) {
+                        input.focus();
+                        return; // Found an empty row, so we stop.
+                    }
+                }
+            }
+
             const isTable = containerId === 'team-members-table';
             const templateId = `${containerId}-template`;
-            const containerSelector = isTable ? `#${containerId} tbody` : `#${containerId}`;
-            
+            const containerEl = isTable ? container.querySelector('tbody') : container;
             const template = document.getElementById(templateId);
-            const container = document.querySelector(containerSelector);
-            if (!template || !container) return;
+            if (!template || !containerEl) return;
 
             const newRowFragment = template.content.cloneNode(true);
             const newRowElement = newRowFragment.firstElementChild;
@@ -1723,8 +1743,8 @@
                 setupAutocomplete(ownerInput, teamMembers, 'name', () => {});
             }
 
-            container.appendChild(newRowElement);
-            updateEmptyState(isTable ? container.parentElement.id : containerId);
+            containerEl.appendChild(newRowElement);
+            updateEmptyState(containerId);
             if (data.strategy) {
                 const def = appData.ericStrategies.find(s => s.name === data.strategy)?.definition;
                 if (def) newRowElement.querySelector('.strategy-definition-display').textContent = def;
@@ -1871,82 +1891,64 @@
 
         function updateLandingPageDashboards() {
             const planData = getPlanData();
-            
-            const updateCount = (id, data) => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = data ? data.length : 0;
+            const containerKeyMap = {
+                'determinants-count': { data: planData.tables['determinants-container'], key: 'determinant' },
+                'strategies-count': { data: planData.tables['strategies-container'], key: 'strategy' },
+                'mechanisms-count': { data: planData.tables['mechanisms-container'], key: 'mechanism' },
+                'implementation-outcomes-count': { data: planData.tables['implementation-outcomes-container'], key: 'outcome' },
+                'service-outcomes-count': { data: planData.tables['service-outcomes-container'], key: 'outcome' },
+                'client-outcomes-count': { data: planData.tables['client-outcomes-container'], key: 'outcome' },
+                'tasks-count': { data: planData.tables['timeline-container'], key: 'task' },
+                'fidelity-components-count': { data: planData.tables['fidelity-plan-container'], key: 'component' },
+                'instruments-count': { data: planData.tables['instruments-container'], key: 'instrument' },
+                'adaptations-count': { data: planData.tables['adaptations-container'], key: 'modification' },
+                'risks-count': { data: planData.tables['risks-container'], key: 'risk' },
+                'opportunities-count': { data: planData.tables['opportunities-container'], key: 'opportunity' }
             };
-            
-            const updateLastLabel = (id, data, key) => {
+
+            for (const [id, config] of Object.entries(containerKeyMap)) {
                 const el = document.getElementById(id);
                 if (el) {
-                    const lastItem = data && data.length > 0 ? data[data.length - 1][key] : '';
-                    el.textContent = lastItem || ' ';
-                    el.title = lastItem || '';
+                    const validItems = (config.data || []).filter(item => item && item[config.key] && item[config.key].trim() !== '');
+                    el.textContent = validItems.length;
                 }
-            };
+            }
             
-            const determinants = planData.tables['determinants-container'];
-            updateCount('determinants-count', determinants);
-            
-            const strategies = planData.tables['strategies-container'];
-            updateCount('strategies-count', strategies);
-            
-            const mechanisms = planData.tables['mechanisms-container'];
-            updateCount('mechanisms-count', mechanisms);
-            
-            const implOutcomes = planData.tables['implementation-outcomes-container'];
-            const servOutcomes = planData.tables['service-outcomes-container'];
-            const clientOutcomes = planData.tables['client-outcomes-container'];
-            updateCount('implementation-outcomes-count', implOutcomes);
-            updateCount('service-outcomes-count', servOutcomes);
-            updateCount('client-outcomes-count', clientOutcomes);
-
-            const tasks = planData.tables['timeline-container'] || [];
-            const completedTasks = tasks.filter(t => t.status === 'Complete');
-            const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date());
-            updateCount('tasks-count', tasks);
+            const tasks = (planData.tables['timeline-container'] || []).filter(t => t.task && t.task.trim() !== '');
+            const completedTasks = tasks.filter(t => t.status === 'Complete').length;
+            const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date()).length;
             const tcc = document.getElementById('tasks-complete-count');
-            if (tcc) tcc.textContent = completedTasks.length;
+            if (tcc) tcc.textContent = completedTasks;
             const toc = document.getElementById('tasks-overdue-count');
-            if (toc) toc.textContent = overdueTasks.length;
+            if(toc) toc.textContent = overdueTasks;
 
-            const fidelity = planData.tables['fidelity-plan-container'];
-            updateCount('fidelity-components-count', fidelity);
-
-            const instruments = planData.tables['instruments-container'];
-            updateCount('instruments-count', instruments);
-
-            const adaptations = planData.tables['adaptations-container'];
-            updateCount('adaptations-count', adaptations);
-
-            const risks = planData.tables['risks-container'] || [];
-            updateCount('risks-count', risks);
+            const risks = (planData.tables['risks-container'] || []).filter(r => r.risk && r.risk.trim() !== '');
+            const highImpactRisks = risks.filter(r => r.impact === 'High').length;
             const hirc = document.getElementById('high-impact-risks-count');
-            if(hirc) hirc.textContent = risks.filter(r => r.impact === 'High').length;
+            if(hirc) hirc.textContent = highImpactRisks;
 
-            const opportunities = planData.tables['opportunities-container'] || [];
-            updateCount('opportunities-count', opportunities);
+            const opportunities = (planData.tables['opportunities-container'] || []).filter(o => o.opportunity && o.opportunity.trim() !== '');
+            const highBenefitOpps = opportunities.filter(o => o.benefit === 'High').length;
             const hboc = document.getElementById('high-benefit-opps-count');
-            if(hboc) hboc.textContent = opportunities.filter(o => o.benefit === 'High').length;
-
+            if(hboc) hboc.textContent = highBenefitOpps;
+            
             const totalTasks = tasks.length;
-            const progress = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+            const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
             const rpk = document.getElementById('report-progress-kpi');
             if (rpk) rpk.textContent = `${progress}%`;
             const rok = document.getElementById('report-overdue-kpi');
-            if (rok) rok.textContent = overdueTasks.length;
+            if (rok) rok.textContent = overdueTasks;
             const rrk = document.getElementById('report-risks-kpi');
-            if(rrk) rrk.textContent = risks.filter(r => r.impact === 'High').length;
+            if(rrk) rrk.textContent = highImpactRisks;
         }
 
         function updateReportVisuals() {
             const planData = getPlanData();
-            const tasks = planData.tables['timeline-container'] || [];
-            const risks = planData.tables['risks-container'] || [];
-            const opportunities = planData.tables['opportunities-container'] || [];
+            const tasks = (planData.tables['timeline-container'] || []).filter(t => t.task && t.task.trim() !== '');
+            const risks = (planData.tables['risks-container'] || []).filter(r => r.risk && r.risk.trim() !== '');
+            const opportunities = (planData.tables['opportunities-container'] || []).filter(o => o.opportunity && o.opportunity.trim() !== '');
 
-            const kpiContainer = document.querySelector('#report-kpi-container .kpi-grid');
+            const kpiContainer = document.querySelector('#summary .kpi-grid');
             if(kpiContainer) {
                 const totalTasks = tasks.length;
                 const completedTasks = tasks.filter(t => t.status === 'Complete').length;
@@ -2017,7 +2019,6 @@
                 state.chartInstances[canvasId].destroy();
             }
 
-            // Correctly pluralize the label
             let pluralLabelKey;
             if (labelKey.endsWith('y')) {
                 pluralLabelKey = labelKey.slice(0, -1) + 'ies';
@@ -2030,7 +2031,7 @@
             const levelMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
             const chartData = {
                 datasets: [{
-                    label: finalLabel, // Use the correctly pluralized label
+                    label: finalLabel,
                     data: data.map(item => ({
                         x: levelMap[item[xKey.toLowerCase()]] || 0,
                         y: levelMap[item[yKey.toLowerCase()]] || 0,
