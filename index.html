@@ -4,12 +4,824 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Implementation Planning & Tracking Template</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for theme and colors */
+        :root {
+            --brown: #4A3F35;
+            --cardinal-red: #C00404;
+            --gold: #FFC72C;
+            --light-gray: #f7f7f7;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #616161;
+            --text-color: #212121;
+            --border-color: #d1d5db;
+            --white: #ffffff;
+            --hover-bg: #edebe9;
+            --sidebar-bg: #3E2723;
+            --sidebar-hover: rgba(255,255,255,0.1);
+            --sidebar-active-bg: var(--brown);
+            --green: #2E7D32;
+            --blue: #1565C0;
+            --yellow: #FFA000;
+            --red: #D32F2F;
+            --grey: #adb5bd;
+            --primary-font: 'Noto Sans', sans-serif;
+        }
+
+        /* General body styling */
+        body {
+            font-family: var(--primary-font);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            margin: 0;
+            font-size: 15px;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--white);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 1001;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-family: var(--primary-font);
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--gold);
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 1.25rem 0 0 0; /* Fixed spacing */
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li {
+            position: relative;
+        }
+
+        .sidebar-nav li a.nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-family: var(--primary-font);
+            border-left: 4px solid transparent;
+            transition: background-color 0.2s, color 0.2s, border-left-color 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-nav li a .nav-icon {
+            width: 20px;
+            height: 20px;
+            stroke-width: 1.5;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav li > a:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--white);
+        }
+
+        .sidebar-nav li a.active {
+            background-color: var(--sidebar-active-bg);
+            color: var(--gold);
+            border-left-color: var(--gold);
+            font-weight: 700;
+        }
+
+        .sidebar-nav li a.active .nav-icon {
+            color: var(--gold);
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 2rem 2.5rem;
+        }
+
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        .back-link:hover {
+            color: var(--brown);
+            background-color: var(--medium-gray);
+        }
+
+        .content-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--medium-gray);
+            margin-bottom: 2rem;
+        }
+
+        .landing-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .module-front-matter {
+            background-color: transparent;
+            border-radius: 12px;
+            perspective: 1500px;
+            min-height: 350px;
+        }
+
+        .card-flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card-flipper.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            border: 1px solid var(--medium-gray);
+            background-color: var(--white);
+            overflow: hidden;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-face-front:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .card-face-back {
+            transform: rotateY(180deg);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-back-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--brown);
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .card-back-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .card-back-list li a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin: 0.25rem -0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-back-list li a:hover {
+            background-color: var(--hover-bg);
+            color: var(--brown);
+        }
+
+        .card-back-empty {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .card-back-empty p {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .module-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .module-header h4 {
+            margin: 0;
+            color: var(--brown);
+            font-size: 1.3rem;
+        }
+        .module-summary {
+            padding: 1rem 1.5rem;
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+        .module-summary strong, .module-summary b {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .module-dashboard {
+            padding: 1rem 1.5rem;
+            background-color: var(--hover-bg);
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            gap: 1.5rem;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-items: center;
+            min-height: 80px;
+        }
+        .dashboard-stat {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+        }
+        .dashboard-stat .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brown);
+        }
+        .irlm-card-last-label {
+            width: 100%;
+            text-align: center;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .irlm-card-empty {
+            color: var(--dark-gray);
+            font-style: italic;
+        }
+
+        h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--brown);
+        }
+
+        h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1.25rem;
+            color: var(--brown);
+        }
+
+        h5 {
+            font-weight: 600;
+            color: var(--brown);
+            font-size: 1.2rem;
+        }
+
+        strong, label {
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: var(--primary-font);
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--white);
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23333'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--brown);
+            box-shadow: 0 0 0 3px rgba(74, 63, 53, 0.1);
+        }
+
+        textarea { min-height: 90px; resize: vertical; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+            vertical-align: top; 
+            word-wrap: break-word;
+        }
+
+        thead th {
+            background-color: var(--hover-bg);
+            color: var(--brown);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:nth-child(even) { background-color: #fdfdfd; }
+        tbody tr:hover { background-color: var(--hover-bg); }
+        .table-actions { text-align: left; padding: 1.25rem 0 0 0; }
+
+        button, a.add-row-btn {
+            border: 1px solid transparent;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button.add-row-btn, a.add-row-btn {
+            background-color: var(--cardinal-red);
+            color: var(--white) !important;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button.add-row-btn:hover, a.add-row-btn:hover {
+            background-color: #a00303;
+            transform: translateY(-1px);
+        }
+
+        button.delete-btn {
+            background-color: transparent;
+            color: var(--dark-gray);
+            padding: 0.4rem;
+            font-size: 1.2rem;
+            line-height: 1;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+
+        button.delete-btn:hover { background-color: #fdeaea; color: var(--red); }
+
+        /* --- Planning Page Modules --- */
+        .planning-module {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+        .planning-module:first-of-type { margin-top: 0; }
+        .planning-module-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--hover-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .planning-module-header h4 {
+            margin: 0; padding: 0; font-size: 1.3rem; font-weight: 700;
+        }
+        .planning-module-header p {
+            margin: 0.25rem 0 0 0; color: var(--dark-gray); font-size: 0.9rem; font-weight: 400;
+        }
+        .planning-module-content { padding: 1.5rem; }
+        .planning-module-content .table-actions { padding-top: 1rem; }
+        .planning-module-content hr {
+            border: none;
+            border-top: 1px solid var(--medium-gray);
+            margin: 2rem 0;
+        }
+
+        /* --- Expandable Row & Card Styles --- */
+        .expandable-row-header, .expandable-card-header {
+            cursor: pointer; display: flex; align-items: center; gap: 1rem;
+            padding: 0.8rem 1rem;
+            transition: background-color 0.2s;
+        }
+        .expandable-row {
+            border: 1px solid transparent;
+            border-bottom: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .expandable-row:last-child { border-bottom: 1px solid var(--medium-gray); }
+        .expandable-row:not(.expanded):hover .expandable-row-header { background-color: var(--hover-bg); }
+        .expandable-row.expanded {
+            background-color: var(--hover-bg); border: 1px solid var(--border-color);
+        }
+        .expandable-row.expanded .expandable-row-header { border-bottom: 1px solid var(--border-color); }
+
+        .expandable-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            background-color: var(--white);
+            transition: background-color 0.2s;
+        }
+        .expandable-card.expanded {
+            background-color: #fcfcfc;
+        }
+        .expandable-card.expanded .expandable-card-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .expandable-card:not(.expanded):hover {
+            background-color: var(--hover-bg);
+        }
+
+        .expandable-row-header .expand-icon, .expandable-card-header .expand-icon {
+            transition: transform 0.3s ease; color: var(--dark-gray); width: 1rem; height: 1rem;
+            flex-shrink: 0;
+        }
+        .expanded .expand-icon { transform: rotate(90deg); }
+        .expandable-row-title, .expandable-card-title { flex-grow: 1; font-weight: 600; color: var(--brown); }
+        .header-input {
+            border: none;
+            background: transparent;
+            font-size: 1em;
+            font-weight: 600;
+            padding: 0;
+            color: var(--brown);
+        }
+        .header-input:focus {
+            box-shadow: none;
+            background: #fff;
+            padding: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .expandable-row-details, .expandable-card-body {
+            display: none; padding: 1.25rem;
+            gap: 1.25rem;
+        }
+        .expandable-row.expanded .expandable-row-details,
+        .expandable-card.expanded .expandable-card-body {
+            display: grid;
+        }
+        .expandable-row-details {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        .expandable-card-body {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        /* --- Dashboard & Specific Sections --- */
+        .chart-card {
+            background-color: var(--white); padding: 1.5rem; border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+        .chart-card h5 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        .chart-wrapper { position: relative; height: 320px; width: 100%; }
+
+        /* --- Progress Bar --- */
+        .progress-card {
+            border: none;
+            box-shadow: none;
+            padding: 0 !important;
+            margin-top: 1rem;
+        }
+        .progress-card h5 {
+            margin-top: 0;
+        }
+        .progress-bar-container {
+            height: 2rem;
+            border-radius: 6px; overflow: hidden; margin-bottom: 0.75rem;
+            display: flex;
+            background-color: #e9ecef;
+        }
+        .progress-bar-segment {
+            height: 100%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: width 0.5s ease-in-out;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .progress-bar-legend {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 1rem; margin-top: 1rem; padding-bottom: 5px;
+        }
+        .legend-item { font-size: 0.8rem; display: flex; align-items: center; gap: 0.4rem;}
+        .legend-color-box { width: 12px; height: 12px; border-radius: 3px; }
+
+        /* --- KPI Cards --- */
+        #report-kpi-container { padding: 0; margin-bottom: 2rem; }
+        .kpi-grid { 
+            display: grid; 
+            gap: 1.5rem; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        }
+        .kpi-card { 
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+        .kpi-title { 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            color: var(--dark-gray); 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+        }
+        .kpi-value { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            color: var(--text-color); 
+            line-height: 1; 
+        }
+
+        /* --- Summary Page --- */
+        .summary-section { 
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+        .summary-section:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+        .summary-section + .summary-section {
+            margin-top: 1.5rem;
+        }
+
+        .summary-section h4 { font-size: 1.3rem; margin-bottom: 1rem; }
+        #summary-goal-container { 
+            font-size: 1.1rem;
+            line-height: 1.6;
+            background-color: var(--hover-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-style: italic;
+        }
+        .no-data-message { padding: 1rem; text-align: center; color: var(--dark-gray); font-style: italic; grid-column: 1 / -1; }
+        .task-filter-controls { display: flex; gap: 1rem; margin-bottom: 1rem; }
+
+        /* --- Glossary Styles --- */
+        #glossary-container h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brown);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        #glossary-container h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--brown);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.25rem;
+        }
+        .glossary-card {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .glossary-term {
+            font-weight: 700;
+            color: var(--brown);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .glossary-definition {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        /* --- Combined Chart Grid --- */
+        .combined-chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* --- Horizontal Scroll Container --- */
+        .horizontal-scroll-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 1rem;
+            align-items: stretch;
+            padding: 0.5rem;
+            margin: 0 -0.5rem;
+        }
+        .horizontal-scroll-container .module-front-matter {
+            flex: 0 0 340px;
+            width: 340px;
+        }
+        .horizontal-scroll-container .irlm-landing-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+            font-size: 2rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* --- Task Table Sorting --- */
+        .sortable-th {
+            cursor: pointer;
+            position: relative;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard */
+        }
+        .sortable-th::after {
+            content: '▲';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.6);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sortable-th::before {
+            content: '▼';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.6);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sortable-th:hover::after, .sortable-th:hover::before { opacity: 0.3; }
+        .sortable-th.sorted-asc::after { opacity: 1; }
+        .sortable-th.sorted-desc::before { opacity: 1; }
+
+        .strategy-definition-display, .outcome-definition-display {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            margin-top: 0;
+            padding: 0.75rem 1rem;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid var(--medium-gray);
+            min-height: 4em;
+        }
+
+        /* Autocomplete Styles */
+        .autocomplete-wrapper { position: relative; }
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 6px 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .autocomplete-results.active { display: block; }
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .autocomplete-item:hover, .autocomplete-item.selected { 
+            background-color: var(--hover-bg); 
+            color: var(--brown);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .app-layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; flex-direction: row; justify-content: space-between; align-items: center; padding: 0; }
+            .sidebar-header { border-bottom: none; padding: 0.75rem 1rem; }
+            .sidebar-header h2 { font-size: 1.2rem; }
+            .sidebar-nav { display: flex; flex-direction: row; margin: 0; overflow-x: auto; }
+            .sidebar-nav li a.nav-link { padding: 0.75rem 1rem; border-left: none; border-bottom: 4px solid transparent; }
+            .sidebar-nav li a.active { border-bottom-color: var(--gold); border-left-color: transparent; }
+            .main-content { margin-left: 0; padding: 1.5rem; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .main-content { padding: 1rem; }
+            .content-card, .card-face { padding: 1.5rem; }
+            h3 { font-size: 1.8rem; } h4 { font-size: 1.3rem; }
+            .expandable-row-details, .expandable-card-body { grid-template-columns: 1fr; }
+            .combined-chart-grid { grid-template-columns: 1fr; }
+            .task-filter-controls { flex-direction: column; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .glossary-grid { grid-template-columns: 1fr; }
+            .horizontal-scroll-container .module-front-matter { flex: 0 0 300px; width: 300px; }
+        }
+    </style>
 </head>
 <body>
     <div class="app-layout">
@@ -19,62 +831,38 @@
             </div>
             <ul class="sidebar-nav">
                 <li>
-                    <a href="#" class="nav-link active" data-target="overview-landing">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2 12.75V12A4.5 4.5 0 0 1 6.5 7.5h11A4.5 4.5 0 0 1 22 12v.75M2 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h11.25m-11.25 0V16.5c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m-3.375 0h3.375m7.875 0h3.375M17.625 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h-11.25" />
-                        </svg>
+                    <a class="nav-link active" data-target="overview-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2 12.75V12A4.5 4.5 0 0 1 6.5 7.5h11A4.5 4.5 0 0 1 22 12v.75M2 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h11.25m-11.25 0V16.5c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m-3.375 0h3.375m7.875 0h3.375M17.625 12.75v3.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V12.75m0 0h-11.25" /></svg>
                         Overview
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link" data-target="model-landing">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 01-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 013.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 013.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 01-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 18l-1.035.259a3.375 3.375 0 00-2.456 2.456L18 21.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 18l1.035-.259a3.375 3.375 0 002.456-2.456L18 12z" />
-                        </svg>
+                    <a class="nav-link" data-target="model-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 01-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 013.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 013.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 01-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 18l-1.035.259a3.375 3.375 0 00-2.456 2.456L18 21.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 18l1.035-.259a3.375 3.375 0 002.456-2.456L18 12z" /></svg>
                         Model
                     </a>
-                    <ul class="dropdown">
-                        <li><a href="#" class="nav-link" data-target="determinants">Determinants</a></li>
-                        <li><a href="#" class="nav-link" data-target="strategies">Strategies</a></li>
-                        <li><a href="#" class="nav-link" data-target="mechanisms">Mechanisms</a></li>
-                        <li><a href="#" class="nav-link" data-target="outcomes">Outcomes</a></li>
-                    </ul>
                 </li>
                  <li>
-                    <a href="#" class="nav-link" data-target="plan-landing">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75c0-.231-.035-.454-.1-.664M6.75 7.5H18a2.25 2.25 0 0 1 2.25 2.25v9.75a2.25 2.25 0 0 1-2.25-2.25H6.75a2.25 2.25 0 0 1-2.25-2.25V9.75a2.25 2.25 0 0 1 2.25-2.25Z" />
-                        </svg>
+                    <a class="nav-link" data-target="plan-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75c0-.231-.035-.454-.1-.664M6.75 7.5H18a2.25 2.25 0 0 1 2.25 2.25v9.75a2.25 2.25 0 0 1-2.25-2.25H6.75a2.25 2.25 0 0 1-2.25-2.25V9.75a2.25 2.25 0 0 1 2.25-2.25Z" /></svg>
                         Plan
                     </a>
-                    <ul class="dropdown">
-                        <li><a href="#" class="nav-link" data-target="protocol">Protocol</a></li>
-                        <li><a href="#" class="nav-link" data-target="fidelity">Fidelity</a></li>
-                        <li><a href="#" class="nav-link" data-target="instruments">Instruments</a></li>
-                    </ul>
                 </li>
                  <li>
-                    <a href="#" class="nav-link" data-target="log-landing">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
+                    <a class="nav-link" data-target="log-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
                         Log
                     </a>
-                    <ul class="dropdown">
-                        <li><a href="#" class="nav-link" data-target="adaptations">Adaptations</a></li>
-                        <li><a href="#" class="nav-link" data-target="risks">Risks</a></li>
-                        <li><a href="#" class="nav-link" data-target="opportunities">Opportunities</a></li>
-                    </ul>
                 </li>
                 <li>
-                    <a href="#" class="nav-link" data-target="report-landing">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                    <a class="nav-link" data-target="report-landing">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
                         Report
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link" data-target="glossary">
-                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                    <a class="nav-link" data-target="glossary">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
                         Glossary
                     </a>
                 </li>
@@ -82,6 +870,7 @@
         </aside>
 
         <main class="main-content">
+            <!-- All content sections will be injected here from templates -->
             <div id="overview-landing" class="content-section active">
                 <div class="content-card">
                     <h3>Project Overview</h3>
@@ -110,488 +899,27 @@
                 </div>
             </div>
 
-            <div id="model-landing" class="content-section">
-                <h3>Implementation Research Logic Model (IRLM)</h3>
-                <div class="horizontal-scroll-container">
-                    <div class="module-front-matter irlm-card-front" data-module="determinants">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Determinants</h4></div>
-                                <div class="module-summary">
-                                    The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="determinants-count">0</span> Identified
-                                        <span class="irlm-card-empty" style="display:none;">No determinants yet</span>
-                                    </div>
-                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter irlm-card-front" data-module="strategies">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Strategies</h4></div>
-                                <div class="module-summary">
-                                    The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="strategies-count">0</span> Selected
-                                        <span class="irlm-card-empty" style="display:none;">No strategies yet</span>
-                                    </div>
-                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter irlm-card-front" data-module="mechanisms">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Mechanisms</h4></div>
-                                <div class="module-summary">
-                                    Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="mechanisms-count">0</span> Hypothesized
-                                        <span class="irlm-card-empty" style="display:none;">No mechanisms yet</span>
-                                    </div>
-                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="irlm-landing-arrow">→</div>
-                    <div class="module-front-matter irlm-card-front" data-module="outcomes">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Outcomes</h4></div>
-                                <div class="module-summary">
-                                    <b>Proctor's Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="implementation-outcomes-count">0</span> Implementation
-                                    </div>
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="service-outcomes-count">0</span> Service
-                                    </div>
-                                    <div class="dashboard-stat">
-                                        <span class="stat-value irlm-card-count" id="client-outcomes-count">0</span> Client
-                                    </div>
-                                    <span class="irlm-card-empty" style="display:none;">No outcomes yet</span>
-                                    <div class="irlm-card-last-label" style="font-size:0.95em;color:#666;"></div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="model-landing" class="content-section"></div>
+            <div id="plan-landing" class="content-section"></div>
+            <div id="log-landing" class="content-section"></div>
+            <div id="report-landing" class="content-section"></div>
 
-            <div id="plan-landing" class="content-section">
-                <h3>Implementation Plan</h3>
-                <div class="landing-page-grid">
-                    <div class="module-front-matter" data-module="protocol">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Protocol</h4></div>
-                                <div class="module-summary">
-                                    The <b>protocol</b> translates implementation strategies into structured, measurable processes that capture all of the activities, tasks, events, and milestones, with responsible owners and deadlines to ensure accountability and track progress.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-count">0</span> Tasks</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-overdue-count">0</span> Overdue</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="tasks-complete-count">0</span> Complete</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="module-front-matter" data-module="fidelity">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Fidelity</h4></div>
-                                <div class="module-summary">
-                                    <b>Fidelity</b> refers to how closely implementation adheres to the original, evidence-based protocol. Specify the EBP's <i>core components</i> (the essential, non-negotiable elements) and plan how to measure them.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="fidelity-components-count">0</span> Core Components</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="module-front-matter" data-module="instruments">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Instruments</h4></div>
-                                <div class="module-summary">
-                                    Document the specific <b>instruments</b> (e.g., surveys, checklists, interview guides) used to measure outcomes, fidelity, and other key constructs throughout the implementation project.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="instruments-count">0</span> Logged</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="log-landing" class="content-section">
-                <h3>Implementation Log</h3>
-                <div class="horizontal-scroll-container">
-                    <div class="module-front-matter" data-module="adaptations">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Adaptations</h4></div>
-                                <div class="module-summary">
-                                    The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="adaptations-count">0</span> Logged</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="module-front-matter" data-module="risks">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Risks</h4></div>
-                                <div class="module-summary">
-                                    A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="risks-count">0</span> Logged</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="high-impact-risks-count">0</span> High Impact</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                    <div class="module-front-matter" data-module="opportunities">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Opportunities</h4></div>
-                                <div class="module-summary">
-                                    A structured log to capture unexpected <b>opportunities</b> to enhance the implementation process or outcomes, including their potential <i>benefit</i> and <i>feasibility</i> to make informed decisions about pursuing them.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="opportunities-count">0</span> Logged</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="high-benefit-opps-count">0</span> High Benefit</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="report-landing" class="content-section">
-                <h3>Implementation Report</h3>
-                <div class="landing-page-grid">
-                    <div class="module-front-matter" data-module="summary">
-                        <div class="card-flipper">
-                            <div class="card-face card-face-front">
-                                <div class="module-header"><h4>Summary & Dashboard</h4></div>
-                                <div class="module-summary">
-                                    A comprehensive summary and dynamic performance dashboard. Provides a high-level view of the implementation effort, including progress against the protocol.
-                                </div>
-                                <div class="module-dashboard">
-                                    <div class="dashboard-stat"><span class="stat-value" id="report-progress-kpi">0%</span> Progress</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="report-overdue-kpi">0</span> Tasks Overdue</div>
-                                    <div class="dashboard-stat"><span class="stat-value" id="report-risks-kpi">0</span> High-Impact Risks</div>
-                                </div>
-                            </div>
-                            <div class="card-face card-face-back"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="determinants" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Determinants</h4>
-                            <p>Define and provide details about key implementation determinants at each level.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="determinants-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No determinants have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="determinants-container">Add Determinant</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="strategies" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Strategies</h4>
-                            <p>Use the Expert Recommendations for Implementation Change (ERIC) compilation to plan the specific strategies for implementing the EBP.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="strategies-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No strategies have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="strategies-container">Add Strategy</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="mechanisms" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Mechanisms</h4>
-                            <p>Describe the processes or events through which implementation strategies operate to affect desired outcomes.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="mechanisms-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No mechanisms have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="mechanisms-container">Add Mechanism</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="outcomes" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="model-landing">← Back to Model</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Outcomes</h4>
-                            <p>Use Proctor's Outcomes for Implementation Research to conceptualize the effects of new treatments, practices, and services on implementation, service, and client outcomes.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <h5>Implementation Outcomes</h5>
-                            <div id="implementation-outcomes-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No implementation outcomes have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="implementation-outcomes-container">Add Outcome</button></div>
-                            <hr>
-                            <h5>Service Outcomes</h5>
-                            <div id="service-outcomes-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No service outcomes have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="service-outcomes-container">Add Outcome</button></div>
-                            <hr>
-                            <h5>Client Outcomes</h5>
-                            <div id="client-outcomes-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No client outcomes have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="client-outcomes-container">Add Outcome</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="protocol" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Protocol</h4>
-                            <p>List the specific activities, tasks, events, and milestones in the implementation effort.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="timeline-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No protocol activities have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="timeline-container">New Activity</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="fidelity" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Fidelity</h4>
-                            <p>Specify the core components of the EBP and how to measure if they are delivered as intended.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="fidelity-plan-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No fidelity components have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="fidelity-plan-container">Add component</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="instruments" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="plan-landing">← Back to Plan</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Measurement Instruments</h4>
-                            <p>Log the specific instruments used for data collection in this project.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="instruments-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No instruments have been added.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="instruments-container">Add Instrument</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="adaptations" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Adaptations</h4>
-                            <p>Use this adaptation log to keep track of modifications to strategies or the EBP.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="adaptations-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No adaptations have been logged.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="adaptations-container">Log Adaptation</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="risks" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Risks</h4>
-                            <p>Identify potential risks to the implementation effort and plan how to address them.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="risks-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No risks have been logged.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="risks-container">Log Risk</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="opportunities" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="log-landing">← Back to Log</a>
-                <div class="content-card">
-                    <div class="planning-module">
-                        <div class="planning-module-header">
-                            <h4>Opportunities</h4>
-                            <p>Identify potential opportunities that could benefit the project.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="opportunities-container" class="expandable-rows-container">
-                                <div class="no-data-message" style="display: none;">No opportunities have been logged.</div>
-                            </div>
-                            <div class="table-actions"><button class="add-row-btn" data-table="opportunities-container">Log Opportunity</button></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="summary" class="content-section">
-                <a href="#" class="nav-link back-link" data-target="report-landing">← Back to Report</a>
-                <div class="content-card">
-                    <h3 id="summary-report-title">Implementation Report</h3>
-                    <div class="summary-section">
-                        <h4>Primary Goal</h4>
-                        <div id="summary-goal-container">
-                            <p id="summary-goal-text">No goal has been defined yet.</p>
-                        </div>
-                    </div>
-                    <div id="summary-irlm-module" class="summary-section planning-module">
-                    </div>
-                    <div class="summary-section planning-module">
-                        <div class="planning-module-content">
-                            <div class="task-filter-controls">
-                                <input type="text" id="task-search-input" placeholder="Search by task name...">
-                                <select id="task-status-filter">
-                                    <option value="">All Statuses</option>
-                                </select>
-                            </div>
-                            <table id="interactive-task-table">
-                                <thead>
-                                    <tr>
-                                        <th class="sortable-th" data-sort-key="task">Task</th>
-                                        <th class="sortable-th" data-sort-key="owner">Owner</th>
-                                        <th class="sortable-th" data-sort-key="end">Due Date</th>
-                                        <th class="sortable-th" data-sort-key="status">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="no-data-row" style="display: none;"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="planning-module summary-section">
-                        <div class="planning-module-header">
-                            <h4>Performance Dashboard</h4>
-                            <p>An overview of key performance indicators and project progress.</p>
-                        </div>
-                        <div class="planning-module-content">
-                            <div id="report-kpi-container">
-                                <div class="kpi-grid">
-                                </div>
-                            </div>
-                            <div class="chart-card progress-card" style="grid-column: 1 / -1; margin-top: 2rem;">
-                                <h5>Activities Progress</h5>
-                                <div id="progress-bar-container" class="progress-bar-container"></div>
-                                <div id="progress-bar-legend" class="progress-bar-legend"></div>
-                            </div>
-                            <div class="chart-card" style="grid-column: 1 / -1; margin-top: 2rem;">
-                                <div class="combined-chart-grid">
-                                    <div>
-                                        <h5>Risk Matrix</h5>
-                                        <div class="chart-wrapper"><canvas id="risk-bubble-chart"></canvas></div>
-                                    </div>
-                                    <div>
-                                        <h5>Opportunity Matrix</h5>
-                                        <div class="chart-wrapper"><canvas id="opportunities-chart"></canvas></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="planning-summary-container">
-                    </div>
-                </div>
-            </div>
-
-            <div id="glossary" class="content-section">
-                <div class="content-card">
-                    <h3>Glossary of Terms</h3>
-                    <input type="text" id="glossary-search" placeholder="Search for a term..." style="margin-bottom: 1.5rem;">
-                    <div id="glossary-container">
-                    </div>
-                </div>
-            </div>
+            <div id="determinants" class="content-section"></div>
+            <div id="strategies" class="content-section"></div>
+            <div id="mechanisms" class="content-section"></div>
+            <div id="outcomes" class="content-section"></div>
+            <div id="protocol" class="content-section"></div>
+            <div id="fidelity" class="content-section"></div>
+            <div id="instruments" class="content-section"></div>
+            <div id="adaptations" class="content-section"></div>
+            <div id="risks" class="content-section"></div>
+            <div id="opportunities" class="content-section"></div>
+            <div id="summary" class="content-section"></div>
+            <div id="glossary" class="content-section"></div>
         </main>
     </div>
 
+    <!-- All HTML templates are below -->
     <template id="team-members-table-template">
         <tr>
             <td data-label="Name"><input type="text" data-field="name" placeholder="Full Name"></td>
@@ -659,7 +987,7 @@
             <div class="expandable-row-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-row-title">
-                    <input type="text" data-field="risk" placeholder="Briefly describe potential risk... e.g., 'evaluation funding may decrease in FY26'" class="header-input">
+                    <input type="text" data-field="risk" placeholder="Briefly describe potential risk..." class="header-input">
                 </div>
                 <button class="delete-btn">&times;</button>
             </div>
@@ -679,7 +1007,7 @@
             <div class="expandable-row-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-row-title">
-                    <input type="text" data-field="opportunity" placeholder="Briefly describe emergent opportunity... e.g., 'partner with a local community center'" class="header-input">
+                    <input type="text" data-field="opportunity" placeholder="Briefly describe emergent opportunity..." class="header-input">
                 </div>
                 <button class="delete-btn">&times;</button>
             </div>
@@ -698,7 +1026,7 @@
             <div class="expandable-row-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-row-title">
-                    <input type="text" data-field="task" placeholder="Briefly describe the task, milestone, or opportunity... e.g., 'finalize training materials'" class="header-input">
+                    <input type="text" data-field="task" placeholder="Briefly describe the task, milestone, or opportunity..." class="header-input">
                 </div>
                 <button class="delete-btn">&times;</button>
             </div>
@@ -713,7 +1041,7 @@
                     </div>
                 </div>
                 <div class="form-group"><label>Status</label><select data-field="status"></select></div>
-                <div class="form-group"><label>% Complete</label><input type="number" data-field="progress" placeholder="%"></div>
+                <div class="form-group"><label>% Complete</label><input type="number" data-field="progress" min="0" max="100" placeholder="%"></div>
                 <div class="form-group full-width"><label>Notes</label><textarea data-field="notes" placeholder="e.g., Related objective, key metric, link to data source"></textarea></div>
             </div>
         </div>
@@ -841,7 +1169,7 @@
             <div class="expandable-row-header">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="expand-icon"><path d="M6 4l6 4-6 4V4z"/></svg>
                 <div class="expandable-row-title">
-                    <input type="text" data-field="modification" placeholder="Briefly describe modification... e.g., 'combined modules 11 & 12 for timing'" class="header-input">
+                    <input type="text" data-field="modification" placeholder="Briefly describe modification..." class="header-input">
                 </div>
                 <button class="delete-btn">&times;</button>
             </div>
@@ -860,6 +1188,1000 @@
         </div>
     </template>
     
-    <script type="module" src="script.js?v=1"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        /**
+         * ----------------------------------------------------------------
+         * Application State and Data
+         * ----------------------------------------------------------------
+         */
+        // Contains static data like dropdown options and glossary terms.
+        const appData = {
+          "options": {
+            "status": ["Not Started", "Waiting", "In Progress", "At Risk", "Complete"],
+            "level": ["Low", "Medium", "High"],
+            "likelihood": ["Low", "Medium", "High"],
+            "impact": ["Low", "Medium", "High"],
+            "benefit": ["Low", "Medium", "High"],
+            "feasibility": ["Low", "Medium", "High"],
+            "itemType": ["Task / Activity", "Event", "Phase", "Milestone"],
+            "fidelityDimension": ["Adherence", "Dose", "Quality", "Participant Responsiveness"],
+            "adaptationNature": ["Tailoring", "Adding", "Removing", "Shortening", "Lengthening", "Substituting", "Reordering"],
+            "adaptationGoal": ["Increase Reach", "Improve Fit", "Decrease Costs", "Improve Effectiveness"],
+            "adaptationPlanned": ["Planned/Proactive", "Planned/Reactive", "Unplanned/Reactive"],
+            "contextLevels": ["Inner Setting", "Outer Setting", "Innovation Characteristics", "Characteristics of Individuals"]
+          },
+          "ericStrategies": [
+            { "name": "Access new funding", "definition": "Access new or existing money to facilitate the implementation." },
+            { "name": "Alter incentive/allowance structures", "definition": "Work to incentivize the adoption and implementation of the clinical innovation." },
+            { "name": "Alter patient/consumer fees", "definition": "Create fee structures where patients/consumers pay less for preferred treatments (the clinical innovation) and more for less-preferred treatments." },
+            { "name": "Assess for readiness and identify barriers and facilitators", "definition": "Assess various aspects of an organization to determine its degree of readiness to implement, barriers that may impede implementation, and strengths that can be used in the implementation effort." },
+            { "name": "Audit and provide feedback", "definition": "Collect and summarize clinical performance data over a specified time period and give it to clinicians and administrators to monitor, evaluate, and modify provider behavior." },
+            { "name": "Build a coalition", "definition": "Recruit and cultivate relationships with partners in the implementation effort." },
+            { "name": "Capture and share local knowledge", "definition": "Capture local knowledge from implementation sites on how implementers and clinicians made something work in their setting and then share it with other sites." },
+            { "name": "Centralize technical assistance", "definition": "Develop and use a centralized system to deliver technical assistance focused on implementation issues." },
+            { "name": "Change accreditation or membership requirements", "definition": "Strive to alter accreditation standards so that they require or encourage use of the clinical innovation. Work to alter membership organization requirements so that those who want to affiliate with the organization are encouraged or required to use the clinical innovation." },
+            { "name": "Change liability laws", "definition": "Participate in liability reform efforts that make clinicians more willing to deliver the clinical innovation." },
+            { "name": "Change physical structure and equipment", "definition": "Evaluate current configurations and adapt, as needed, the physical structure and/or equipment (e.g., changing the layout of a room, adding equipment) to best accommodate the targeted innovation." },
+            { "name": "Change record systems", "definition": "Change records systems to allow better assessment of implementation or clinical outcomes." },
+            { "name": "Change service sites", "definition": "Change the location of clinical service sites to increase access." },
+            { "name": "Conduct cyclical small tests of change", "definition": "Implement changes in a cyclical fashion using small tests of change before taking changes system-wide. Tests of change benefit from systematic measurement, and results of the tests of change are studied for insights on how to do better. This process continues serially over time, and refinement is added with each cycle." },
+            { "name": "Conduct educational meetings", "definition": "Hold meetings targeted toward different stakeholder groups (e.g., providers, administrators, other organizational stakeholders, and community, patient/consumer, and family stakeholders) to teach them about the clinical innovation." },
+            { "name": "Conduct educational outreach visits", "definition": "Have a trained person meet with providers in their practice settings to educate providers about the clinical innovation with the intent of changing the provider's practice." },
+            { "name": "Conduct local consensus discussions", "definition": "Include local providers and other stakeholders in discussions that address whether the chosen problem is important and whether the clinical innovation to address it is appropriate." },
+            { "name": "Conduct local needs assessment", "definition": "Collect and analyze data related to the need for the innovation." },
+            { "name": "Conduct ongoing training", "definition": "Plan for and conduct training in the clinical innovation in an ongoing way." },
+            { "name": "Create a learning collaborative", "definition": "Facilitate the formation of groups of providers or provider organizations and foster a collaborative learning environment to improve implementation of the clinical innovation." },
+            { "name": "Create new clinical teams", "definition": "Change who serves on the clinical team, adding different disciplines and different skills to make it more likely that the clinical innovation is delivered (or is more successfully delivered)." },
+            { "name": "Create or change credentialing and/or licensure standards", "definition": "Create an organization that certifies clinicians in the innovation or encourage an existing organization to do so. Change governmental professional certification or licensure requirements to include delivering the innovation. Work to alter continuing education requirements to shape professional practice toward the innovation." },
+            { "name": "Develop a formal implementation blueprint", "definition": "Develop a formal implementation blueprint that includes all goals and strategies. The blueprint should include the following: 1) aim/purpose of the implementation; 2) scope of the change (e.g., what organizational units are affected); 3) timeframe and milestones; and 4) appropriate performance/progress measures. Use and update this plan to guide the implementation effort over time." },
+            { "name": "Develop academic partnerships", "definition": "Partner with a university or academic unit for the purposes of shared training and bringing research skills to an implementation project." },
+            { "name": "Develop an implementation glossary", "definition": "Develop and distribute a list of terms describing the innovation, implementation, and stakeholders in the organizational change." },
+            { "name": "Develop and implement tools for quality monitoring", "definition": "Develop, test, and introduce into quality-monitoring systems the right input-the appropriate language, protocols, algorithms, standards, and measures (of processes patient/consumer outcomes, and implementation outcomes) that are often specific to the innovation being implemented." },
+            { "name": "Develop and organize quality monitoring systems", "definition": "Develop and organize systems and procedures that monitor clinical processes and/or outcomes for the purpose of quality assurance and improvement." },
+            { "name": "Develop disincentives", "definition": "Provide financial disincentives for failure to implement or use the clinical innovations." },
+            { "name": "Develop educational materials", "definition": "Develop and format manuals, toolkits, and other supporting materials in ways that make it easier for stakeholders to learn about the innovation and for clinicians to learn how to deliver the clinical innovation." },
+            { "name": "Develop resource sharing agreements", "definition": "Develop partnerships with organizations that have resources needed to implement the innovation." },
+            { "name": "Distribute educational materials", "definition": "Distribute educational materials (including guidelines, manuals, and toolkits) in person, by mail, and/or electronically." },
+            { "name": "Facilitate relay of clinical data to providers", "definition": "Provide as close to real-time data as possible about key measures of process/outcomes using integrated modes/channels of communication in a way that promotes use of the targeted innovation." },
+            { "name": "Facilitation", "definition": "A process of interactive problem solving and support that occurs in a context of a recognized need for improvement and a supportive interpersonal relationship." },
+            { "name": "Fund and contract for the clinical innovation", "definition": "Governments and other payers of services issue requests for proposals to deliver the innovation, use contracting processes to motivate providers to deliver the clinical innovation, and develop new funding formulas that make it more likely that providers will deliver the innovation." },
+            { "name": "Identify and prepare champions", "definition": "Identify and prepare individuals who dedicate themselves to supporting, marketing and driving through an implementation, overcoming indifference or resistance that the intervention may provoke in an organization." },
+            { "name": "Identify early adopters", "definition": "Identify early adopters at the local site to learn from their experiences with the practice innovation." },
+            { "name": "Increase demand", "definition": "Attempt to influence the market for the clinical innovation to increase competition intensity and to increase the maturity of the market for the clinical innovation." },
+            { "name": "Inform local opinion leaders", "definition": "Inform providers identified by colleagues as opinion leaders or 'educationally influential' about the clinical innovation in the hopes that they will influence colleagues to adopt it." },
+            { "name": "Intervene with patients/consumers to enhance uptake and adherence", "definition": "Develop strategies with patients to encourage and problem solve around adherence." },
+            { "name": "Involve executive boards", "definition": "Involve existing governing structures (e.g., boards of directors, medical staff boards of governance) in the implementation effort, including the review of data on implementation processes." },
+            { "name": "Involve patients/consumers and family members", "definition": "Engage or include patients/consumers and families in the implementation effort." },
+            { "name": "Make billing easier", "definition": "Make it easier to bill for the clinical innovation." },
+            { "name": "Make training dynamic", "definition": "Vary the information delivery methods to cater to different learning styles and work contexts, and shape the training in the innovation to be interactive." },
+            { "name": "Mandate change", "definition": "Have leadership declare the priority of the innovation and their determination to have it implemented." },
+            { "name": "Model and simulate change", "definition": "Model or simulate the change that will be implemented prior to implementation." },
+            { "name": "Obtain and use patients/consumers and family feedback", "definition": "Develop strategies to increase patient/consumer and family feedback on the implementation effort." },
+            { "name": "Obtain formal commitments", "definition": "Obtain written commitments from key partners that state what they will do to implement the innovation." },
+            { "name": "Organize clinician implementation team meetings", "definition": "Develop and support teams of clinicians who are implementing the innovation and give them protected time to reflect on the implementation effort, share lessons learned, and support one another's learning." },
+            { "name": "Place innovation on fee for service lists/formularies", "definition": "Work to place the clinical innovation on lists of actions for which providers can be reimbursed (e.g., a drug is placed on a formulary, a procedure is now reimbursable)." },
+            { "name": "Prepare patients/consumers to be active participants", "definition": "Prepare patients/consumers to be active in their care, to ask questions, and specifically to inquire about care guidelines, the evidence behind clinical decisions, or about available evidence-supported treatments." },
+            { "name": "Promote adaptability", "definition": "Identify the ways a clinical innovation can be tailored to meet local needs and clarify which elements of the innovation must be maintained to preserve fidelity." },
+            { "name": "Promote network weaving", "definition": "Identify and build on existing high-quality working relationships and networks within and outside the organization, organizational units, teams, etc. to promote information sharing, collaborative problem-solving, and a shared vision/goal related to implementing the innovation." },
+            { "name": "Provide clinical supervision", "definition": "Provide clinicians with ongoing supervision focusing on the innovation. Provide training for clinical supervisors who will supervise clinicians who provide the innovation." },
+            { "name": "Provide local technical assistance", "definition": "Develop and use a system to deliver technical assistance focused on implementation issues using local personnel." },
+            { "name": "Provide ongoing consultation", "definition": "Provide ongoing consultation with one or more experts in the strategies used to support implementing the innovation." },
+            { "name": "Purposely reexamine the implementation", "definition": "Monitor progress and adjust clinical practices and implementation strategies to continuously improve the quality of care." },
+            { "name": "Recruit, designate, and train for leadership", "definition": "Recruit, designate, and train leaders for the change effort." },
+            { "name": "Remind clinicians", "definition": "Develop reminder systems designed to help clinicians to recall information and/or prompt them to use the clinical innovation." },
+            { "name": "Revise professional roles", "definition": "Shift and revise roles among professionals who provide care, and redesign job characteristics." },
+            { "name": "Shadow other experts", "definition": "Provide ways for key individuals to directly observe experienced people engage with or use the targeted practice change/innovation." },
+            { "name": "Stage implementation scale up", "definition": "Phase implementation efforts by starting with small pilots or demonstration projects and gradually move to a system wide rollout." },
+            { "name": "Start a dissemination organization", "definition": "Identify or start a separate organization that is responsible for disseminating the clinical innovation. It could be a for-profit or non-profit organization." },
+            { "name": "Tailor strategies", "definition": "Tailor the implementation strategies to address barriers and leverage facilitators that were identified through earlier data collection." },
+            { "name": "Use advisory boards and workgroups", "definition": "Create and engage a formal group of multiple kinds of stakeholders to provide input and advice on implementation efforts and to elicit recommendations for improvements." },
+            { "name": "Use an implementation advisor", "definition": "Seek guidance from experts in implementation." },
+            { "name": "Use capitated payments", "definition": "Pay providers or care systems a set amount per patient/consumer for delivering clinical care." },
+            { "name": "Use data experts", "definition": "Involve, hire, and/or consult experts to inform management on the use of data generated by implementation efforts." },
+            { "name": "Use data warehousing techniques", "definition": "Integrate clinical records across facilities and organizations to facilitate implementation across systems." },
+            { "name": "Use mass media", "definition": "Use media to reach large numbers of people to spread the word about the clinical innovation." },
+            { "name": "Use other payment schemes", "definition": "Introduce payment approaches (in a catch-all category)." },
+            { "name": "Use train-the-trainer strategies", "definition": "Train designated clinicians or organizations to train others in the clinical innovation." },
+            { "name": "Visit other sites", "definition": "Visit sites where a similar implementation effort has been considered successful." },
+            { "name": "Work with educational institutions", "definition": "Encourage educational institutions to train clinicians in the innovation." }
+          ],
+          "allOutcomesData": {
+              "Implementation Outcomes": [
+                  { "name": "Acceptability", "definition": "The perception among implementation stakeholders that a given treatment, service, practice, or innovation is agreeable, palatable, or satisfactory." },
+                  { "name": "Adoption", "definition": "The intention, initial decision, or action to try or employ an innovation or evidence-based practice." },
+                  { "name": "Appropriateness", "definition": "The perceived fit, relevance, or compatibility of the innovation or evidence based practice for a given practice setting, provider, or consumer; and/or perceived fit of the innovation to address a particular issue or problem." },
+                  { "name": "Feasibility", "definition": "The extent to which a new treatment, or an innovation, can be successfully used or carried out within a given agency or setting." },
+                  { "name": "Fidelity", "definition": "The degree to which an intervention was implemented as it was prescribed in the original protocol or as it was intended by the program developers." },
+                  { "name": "Implementation Cost", "definition": "The cost impact of an implementation effort." },
+                  { "name": "Penetration", "definition": "The integration of a practice within a service setting and its subsystems." },
+                  { "name": "Sustainability", "definition": "The extent to which a newly implemented treatment is maintained or institutionalized within a service setting’s ongoing, stable operations." }
+              ],
+              "Service Outcomes": [
+                  { "name": "Efficiency", "definition": "The extent to which a service achieves its outcomes with the minimal expenditure of resources." },
+                  { "name": "Safety", "definition": "The extent to which a service minimizes the risk of harm to consumers." },
+                  { "name": "Effectiveness", "definition": "The extent to which a service achieves its intended outcomes when delivered in real-world settings." },
+                  { "name": "Equity", "definition": "The extent to which a service is delivered in a way that is fair and just, without disparities based on patient characteristics." },
+                  { "name": "Patient-centeredness", "definition": "The extent to which a service is respectful of and responsive to individual patient preferences, needs, and values." },
+                  { "name": "Timeliness", "definition": "The extent to which a service is provided to consumers in a timely manner, reducing waits and harmful delays." }
+              ],
+              "Client Outcomes": [
+                  { "name": "Satisfaction", "definition": "The client's level of contentment with the services received." },
+                  { "name": "Function", "definition": "The impact of a service on a client's ability to perform daily activities and roles." },
+                  { "name": "Symptomatology", "definition": "The effect of a service on a client's symptoms and signs of illness." }
+              ]
+          }
+        };
+
+        // Holds runtime state like chart instances and sorting preferences.
+        const state = {
+            chartInstances: {},
+            saveTimeout: null,
+            taskTableSort: { key: 'end', direction: 'asc' },
+            pageConfig: {
+                'model-landing': {
+                    title: 'Implementation Research Logic Model (IRLM)',
+                    horizontal: true,
+                    cards: [
+                        { module: 'determinants', title: 'Determinants', summary: 'The <b>Exploration, Preparation, Implementation, and Sustainment Framework (EPIS)</b> and <b>Consolidated Framework for Implementation Research (CFIR)</b> assess determinants across multiple levels.', stats: [{id: 'determinants-count', label: 'Identified'}] },
+                        { module: 'strategies', title: 'Strategies', summary: 'The <b>Expert Recommendations for Implementing Change (ERIC)</b> compilation is a tool for selecting specific implementation strategies with active ingredients designed to address the identified determinants.', stats: [{id: 'strategies-count', label: 'Selected'}] },
+                        { module: 'mechanisms', title: 'Mechanisms', summary: 'Implementation <b>mechanisms</b> are the processes through which strategies work to produce change... e.g., a training strategy might work by increasing clinician <i>self-efficacy</i>, in turn improving fidelity to the EBP.', stats: [{id: 'mechanisms-count', label: 'Hypothesized'}] },
+                        { module: 'outcomes', title: 'Outcomes', summary: '<b>Proctor\'s Taxonomy of Outcomes</b> conceptualizes implementation outcomes in 3 distinct categories: <i>Implementation</i> (e.g., feasibility, fidelity), <i>Service</i> (e.g., efficiency, safety), and <i>Client</i> (e.g., satisfaction, symptoms).', stats: [{id: 'implementation-outcomes-count', label: 'Implementation'}, {id: 'service-outcomes-count', label: 'Service'}, {id: 'client-outcomes-count', label: 'Client'}] }
+                    ]
+                },
+                'plan-landing': {
+                    title: 'Implementation Plan',
+                    cards: [
+                        { module: 'protocol', title: 'Protocol', summary: 'The <b>protocol</b> translates implementation strategies into structured, measurable processes that capture all of the activities, tasks, events, and milestones, with responsible owners and deadlines to ensure accountability and track progress.', stats: [{id: 'tasks-count', label: 'Tasks'}, {id: 'tasks-overdue-count', label: 'Overdue'}, {id: 'tasks-complete-count', label: 'Complete'}] },
+                        { module: 'fidelity', title: 'Fidelity', summary: '<b>Fidelity</b> refers to how closely implementation adheres to the original, evidence-based protocol. Specify the EBP\'s <i>core components</i> (the essential, non-negotiable elements) and plan how to measure them.', stats: [{id: 'fidelity-components-count', label: 'Core Components'}] },
+                        { module: 'instruments', title: 'Instruments', summary: 'Document the specific <b>instruments</b> (e.g., surveys, checklists, interview guides) used to measure outcomes, fidelity, and other key constructs throughout the implementation project.', stats: [{id: 'instruments-count', label: 'Logged'}] }
+                    ]
+                },
+                'log-landing': {
+                    title: 'Implementation Log',
+                    cards: [
+                        { module: 'adaptations', title: 'Adaptations', summary: 'The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).', stats: [{id: 'adaptations-count', label: 'Logged'}] },
+                        { module: 'risks', title: 'Risks', summary: 'A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.', stats: [{id: 'risks-count', label: 'Logged'}, {id: 'high-impact-risks-count', label: 'High Impact'}] },
+                        { module: 'opportunities', title: 'Opportunities', summary: 'A structured log to capture unexpected <b>opportunities</b> to enhance the implementation process or outcomes, including their potential <i>benefit</i> and <i>feasibility</i> to make informed decisions about pursuing them.', stats: [{id: 'opportunities-count', label: 'Logged'}, {id: 'high-benefit-opps-count', label: 'High Benefit'}] }
+                    ]
+                },
+                'report-landing': {
+                    title: 'Implementation Report',
+                    cards: [
+                        { module: 'summary', title: 'Summary & Dashboard', summary: 'A comprehensive summary and dynamic performance dashboard. Provides a high-level view of the implementation effort, including progress against the protocol.', stats: [{id: 'report-progress-kpi', label: 'Progress'}, {id: 'report-overdue-kpi', label: 'Tasks Overdue'}, {id: 'report-risks-kpi', label: 'High-Impact Risks'}] }
+                    ]
+                },
+                'determinants': { back: 'model-landing', title: 'Determinants', desc: 'Define and provide details about key implementation determinants at each level.', containerId: 'determinants-container', button: 'Add Determinant' },
+                'strategies': { back: 'model-landing', title: 'Strategies', desc: 'Use the Expert Recommendations for Implementation Change (ERIC) compilation to plan the specific strategies for implementing the EBP.', containerId: 'strategies-container', button: 'Add Strategy' },
+                'mechanisms': { back: 'model-landing', title: 'Mechanisms', desc: 'Describe the processes or events through which implementation strategies operate to affect desired outcomes.', containerId: 'mechanisms-container', button: 'Add Mechanism' },
+                'outcomes': { back: 'model-landing', title: 'Outcomes', desc: 'Use Proctor\'s Outcomes for Implementation Research to conceptualize the effects of new treatments, practices, and services on implementation, service, and client outcomes.', special: true },
+                'protocol': { back: 'plan-landing', title: 'Protocol', desc: 'List the specific activities, tasks, events, and milestones in the implementation effort.', containerId: 'timeline-container', button: 'New Activity' },
+                'fidelity': { back: 'plan-landing', title: 'Fidelity', desc: 'Specify the core components of the EBP and how to measure if they are delivered as intended.', containerId: 'fidelity-plan-container', button: 'Add Component' },
+                'instruments': { back: 'plan-landing', title: 'Instruments', desc: 'Log the specific instruments used for data collection in this project.', containerId: 'instruments-container', button: 'Add Instrument' },
+                'adaptations': { back: 'log-landing', title: 'Adaptations', desc: 'Use this adaptation log to keep track of modifications to strategies or the EBP.', containerId: 'adaptations-container', button: 'Log Adaptation' },
+                'risks': { back: 'log-landing', title: 'Risks', desc: 'Identify potential risks to the implementation effort and plan how to address them.', containerId: 'risks-container', button: 'Log Risk' },
+                'opportunities': { back: 'log-landing', title: 'Opportunities', desc: 'Identify potential opportunities that could benefit the project.', containerId: 'opportunities-container', button: 'Log Opportunity' },
+                'summary': { back: 'report-landing', title: 'Implementation Report', special: true },
+                'glossary': { title: 'Glossary of Terms', special: true }
+            }
+        };
+
+        /**
+         * ----------------------------------------------------------------
+         * INITIALIZATION
+         * ----------------------------------------------------------------
+         */
+        function initializeApp() {
+            console.log("Initializing application...");
+            buildPageTemplates();
+            loadPlanFromLocalStorage();
+            setupEventListeners();
+            navigateTo('overview-landing', true);
+            console.log("Application initialized.");
+        }
+        
+        function buildPageTemplates() {
+            for (const [pageId, config] of Object.entries(state.pageConfig)) {
+                const section = document.getElementById(pageId);
+                if (!section) continue;
+
+                let html = '';
+                if (config.cards) { // Landing pages
+                    const containerClass = config.horizontal ? 'horizontal-scroll-container' : 'landing-page-grid';
+                    html += `<h3>${config.title}</h3><div class="${containerClass}">`;
+                    config.cards.forEach((card, index) => {
+                        html += `
+                        <div class="module-front-matter" data-module="${card.module}">
+                            <div class="card-flipper">
+                                <div class="card-face card-face-front">
+                                    <div class="module-header"><h4>${card.title}</h4></div>
+                                    <div class="module-summary">${card.summary}</div>
+                                    <div class="module-dashboard">
+                                        ${card.stats.map(stat => `<div class="dashboard-stat"><span class="stat-value" id="${stat.id}">0</span>${stat.label}</div>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="card-face card-face-back"></div>
+                            </div>
+                        </div>`;
+                        if (config.horizontal && index < config.cards.length - 1) {
+                            html += `<div class="irlm-landing-arrow">→</div>`;
+                        }
+                    });
+                    html += `</div>`;
+                } else if (config.special) { // Special pages like summary, glossary, outcomes
+                    if (pageId === 'outcomes') {
+                        html = `<a href="#" class="nav-link back-link" data-target="${config.back}">← Back to Model</a>
+                        <div class="content-card"><div class="planning-module">
+                            <div class="planning-module-header"><h4>${config.title}</h4><p>${config.desc}</p></div>
+                            <div class="planning-module-content">
+                                <h5>Implementation Outcomes</h5>
+                                <div id="implementation-outcomes-container" class="expandable-rows-container"><div class="no-data-message" style="display: none;">No implementation outcomes have been added.</div></div>
+                                <div class="table-actions"><button class="add-row-btn" data-table="implementation-outcomes-container">Add Outcome</button></div><hr>
+                                <h5>Service Outcomes</h5>
+                                <div id="service-outcomes-container" class="expandable-rows-container"><div class="no-data-message" style="display: none;">No service outcomes have been added.</div></div>
+                                <div class="table-actions"><button class="add-row-btn" data-table="service-outcomes-container">Add Outcome</button></div><hr>
+                                <h5>Client Outcomes</h5>
+                                <div id="client-outcomes-container" class="expandable-rows-container"><div class="no-data-message" style="display: none;">No client outcomes have been added.</div></div>
+                                <div class="table-actions"><button class="add-row-btn" data-table="client-outcomes-container">Add Outcome</button></div>
+                            </div>
+                        </div></div>`;
+                    } else if (pageId === 'summary') {
+                        html = `<a href="#" class="nav-link back-link" data-target="${config.back}">← Back to Report</a>
+                        <div class="content-card">
+                            <h3 id="summary-report-title">Implementation Report</h3>
+                            <div class="summary-section"><h4>Primary Goal</h4><div id="summary-goal-container"><p id="summary-goal-text">No goal has been defined yet.</p></div></div>
+                            <div class="planning-module summary-section">
+                                <div class="planning-module-header"><h4>Performance Dashboard</h4><p>An overview of key performance indicators and project progress.</p></div>
+                                <div class="planning-module-content">
+                                    <div id="report-kpi-container"><div class="kpi-grid"></div></div>
+                                    <div class="chart-card progress-card" style="margin-top: 2rem;">
+                                        <h5>Activities Progress</h5>
+                                        <div id="progress-bar-container" class="progress-bar-container"></div>
+                                        <div id="progress-bar-legend" class="progress-bar-legend"></div>
+                                    </div>
+                                    <div class="chart-card" style="margin-top: 2rem;">
+                                        <div class="combined-chart-grid">
+                                            <div><h5>Risk Matrix</h5><div class="chart-wrapper"><canvas id="risk-bubble-chart"></canvas></div></div>
+                                            <div><h5>Opportunity Matrix</h5><div class="chart-wrapper"><canvas id="opportunities-chart"></canvas></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="planning-module summary-section">
+                                <div class="planning-module-header"><h4>Protocol Task List</h4></div>
+                                <div class="planning-module-content">
+                                    <div class="task-filter-controls">
+                                        <input type="text" id="task-search-input" placeholder="Search by task name...">
+                                        <select id="task-status-filter"><option value="">All Statuses</option></select>
+                                    </div>
+                                    <table id="interactive-task-table">
+                                        <thead><tr>
+                                            <th class="sortable-th" data-sort-key="task">Task</th><th class="sortable-th" data-sort-key="owner">Owner</th>
+                                            <th class="sortable-th" data-sort-key="end">Due Date</th><th class="sortable-th" data-sort-key="status">Status</th>
+                                        </tr></thead>
+                                        <tbody><tr class="no-data-row" style="display: none;"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else if (pageId === 'glossary') {
+                        html = `<div class="content-card">
+                            <h3>Glossary of Terms</h3>
+                            <input type="text" id="glossary-search" placeholder="Search for a term..." style="margin-bottom: 1.5rem;">
+                            <div id="glossary-container"></div>
+                        </div>`;
+                    }
+                } else { // Standard content pages
+                    html = `
+                    <a href="#" class="nav-link back-link" data-target="${config.back}">← Back to ${config.back.split('-')[0].charAt(0).toUpperCase() + config.back.split('-')[0].slice(1)}</a>
+                    <div class="content-card"><div class="planning-module">
+                        <div class="planning-module-header"><h4>${config.title}</h4><p>${config.desc}</p></div>
+                        <div class="planning-module-content">
+                            <div id="${config.containerId}" class="expandable-rows-container"><div class="no-data-message" style="display: none;">No items have been added.</div></div>
+                            <div class="table-actions"><button class="add-row-btn" data-table="${config.containerId}">${config.button}</button></div>
+                        </div>
+                    </div></div>`;
+                }
+                section.innerHTML = html;
+            }
+        }
+
+        /**
+         * ----------------------------------------------------------------
+         * DATA PERSISTENCE (LOCAL STORAGE)
+         * ----------------------------------------------------------------
+         */
+        function getPlanData() {
+            const data = { simpleInputs: {}, tables: {} };
+            document.querySelectorAll('.saveable').forEach(input => {
+                if (input.id) data.simpleInputs[input.id] = input.value;
+            });
+            const allTableIds = [
+                'team-members-table', 'determinants-container', 'strategies-container', 
+                'mechanisms-container', 'risks-container', 'opportunities-container', 
+                'timeline-container', 'implementation-outcomes-container', 'service-outcomes-container', 
+                'client-outcomes-container', 'fidelity-plan-container', 'adaptations-container', 'instruments-container'
+            ];
+            allTableIds.forEach(id => {
+                const container = document.getElementById(id);
+                if (!container) return;
+                const isTable = container.tagName === 'TABLE';
+                const rowSelector = isTable ? 'tbody tr:not(.no-data-row)' : '.expandable-row, .expandable-card';
+                const rows = container.querySelectorAll(rowSelector);
+                const tableData = Array.from(rows).map(row => {
+                    const rowData = {};
+                    row.querySelectorAll('[data-field]').forEach(input => {
+                        rowData[input.dataset.field] = input.value;
+                    });
+                    return rowData;
+                });
+                data.tables[id] = tableData;
+            });
+            return data;
+        }
+
+        function savePlanToLocalStorage() {
+            try {
+                localStorage.setItem('implementationPlanData', JSON.stringify(getPlanData()));
+                console.log("Plan saved to Local Storage.");
+            } catch (error) {
+                console.error("Error saving to Local Storage: ", error);
+            }
+        }
+
+        function loadPlanFromLocalStorage() {
+            const allContainerSelectors = [
+                '#team-members-table tbody', '#determinants-container', '#strategies-container', '#mechanisms-container',
+                '#risks-container', '#opportunities-container', '#timeline-container',
+                '#implementation-outcomes-container', '#service-outcomes-container', '#client-outcomes-container',
+                '#fidelity-plan-container', '#adaptations-container', '#instruments-container'
+            ];
+            allContainerSelectors.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el) el.innerHTML = '';
+            });
+
+            const savedData = localStorage.getItem('implementationPlanData');
+            if (savedData) {
+                console.log("Loading plan from Local Storage.");
+                const planData = JSON.parse(savedData);
+                if (planData.simpleInputs) {
+                    Object.entries(planData.simpleInputs).forEach(([id, value]) => {
+                        const input = document.getElementById(id);
+                        if (input) input.value = value;
+                    });
+                }
+                if (planData.tables) {
+                    Object.entries(planData.tables).forEach(([tableId, tableData]) => {
+                        (tableData || []).forEach(rowData => addRow(tableId, rowData));
+                    });
+                }
+            } else {
+                console.log("No saved plan found. Initializing new template.");
+            }
+            
+            allContainerSelectors.forEach(selector => updateEmptyState(selector.replace('#', '').split(' ')[0]));
+            updateSidebarTitle();
+            updateAllDashboards();
+            populateGlossary();
+            initializeFlippableCards();
+        }
+
+        function triggerSave() {
+            clearTimeout(state.saveTimeout);
+            state.saveTimeout = setTimeout(() => {
+                savePlanToLocalStorage();
+                updateAllDashboards();
+            }, 500);
+        }
+
+        /**
+         * ----------------------------------------------------------------
+         * UI AND HELPER FUNCTIONS
+         * ----------------------------------------------------------------
+         */
+        function navigateTo(targetId, isInitial = false) {
+            document.querySelectorAll('.card-flipper.is-flipped').forEach(flipper => flipper.classList.remove('is-flipped'));
+
+            const allLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+            allLinks.forEach(nav => nav.classList.remove('active'));
+            
+            let finalTargetId = targetId;
+            const pageConfig = state.pageConfig[targetId];
+            if (pageConfig && pageConfig.back) {
+                finalTargetId = pageConfig.back;
+            }
+
+            const targetLink = document.querySelector(`.nav-link[data-target="${finalTargetId}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+            
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.toggle('active', section.id === targetId);
+            });
+
+            if (!isInitial) {
+                updateAllDashboards();
+            }
+        }
+        
+        function populateGlossary() {
+            const glossaryContainer = document.getElementById('glossary-container');
+            if (!glossaryContainer || !appData.ericStrategies || glossaryContainer.children.length > 0) return;
+
+            const glossaryData = {
+                "Implementation Strategies": {
+                    "Expert Recommendations for Implementing Change (ERIC)": appData.ericStrategies
+                },
+                "Implementation Outcomes": {
+                    "Proctor's Outcome Taxonomy: Implementation": appData.allOutcomesData["Implementation Outcomes"],
+                    "Proctor's Outcome Taxonomy: Service": appData.allOutcomesData["Service Outcomes"],
+                    "Proctor's Outcome Taxonomy: Client": appData.allOutcomesData["Client Outcomes"]
+                }
+            };
+
+            glossaryContainer.innerHTML = '';
+            Object.entries(glossaryData).forEach(([mainCategory, subCategories]) => {
+                const mainHeader = document.createElement('h4');
+                mainHeader.textContent = mainCategory;
+                glossaryContainer.appendChild(mainHeader);
+                
+                Object.entries(subCategories).forEach(([subCategory, terms]) => {
+                    const subHeader = document.createElement('h5');
+                    subHeader.textContent = subCategory;
+                    glossaryContainer.appendChild(subHeader);
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'glossary-grid';
+                    terms.sort((a, b) => a.name.localeCompare(b.name)).forEach(term => {
+                        const card = document.createElement('div');
+                        card.className = 'glossary-card';
+                        card.innerHTML = `<div class="glossary-term">${term.name}</div><div class="glossary-definition">${term.definition}</div>`;
+                        grid.appendChild(card);
+                    });
+                    glossaryContainer.appendChild(grid);
+                });
+            });
+        }
+
+        function addRow(containerId, data = {}) {
+            const isTable = containerId === 'team-members-table';
+            const templateId = `${containerId}-template`;
+            const containerSelector = isTable ? `#${containerId} tbody` : `#${containerId}`;
+            
+            const template = document.getElementById(templateId);
+            const container = document.querySelector(containerSelector);
+            if (!template || !container) return;
+
+            const newRowFragment = template.content.cloneNode(true);
+            const newRowElement = newRowFragment.firstElementChild;
+            
+            newRowElement.querySelectorAll('select[data-field]').forEach(select => {
+                const field = select.dataset.field;
+                const optionKey = {
+                    status: 'status', likelihood: 'likelihood', impact: 'impact', benefit: 'benefit', 
+                    feasibility: 'feasibility', itemType: 'itemType', dimension: 'fidelityDimension', 
+                    nature: 'adaptationNature', goal: 'adaptationGoal', planned: 'adaptationPlanned', 
+                    context: 'contextLevels'
+                }[field];
+                if (optionKey && appData.options[optionKey]) {
+                    populateSelect(select, appData.options[optionKey], `Select a ${field}...`);
+                }
+            });
+
+            if (newRowElement.querySelector('.core-component-dropdown')) {
+                const coreComponents = getPlanData().tables['fidelity-plan-container']?.map(c => c.component).filter(Boolean) || [];
+                populateSelect(newRowElement.querySelector('.core-component-dropdown'), coreComponents, 'Select a component...');
+            }
+            
+            Object.entries(data).forEach(([field, value]) => {
+                const input = newRowElement.querySelector(`[data-field="${field}"]`);
+                if (input) input.value = value;
+            });
+            
+            const strategyInput = newRowElement.querySelector('.strategy-search-input');
+            if (strategyInput) {
+                setupAutocomplete(strategyInput, appData.ericStrategies, 'name', (item) => {
+                    const definitionDisplay = newRowElement.querySelector('.strategy-definition-display');
+                    if (definitionDisplay) definitionDisplay.textContent = item.definition;
+                });
+            }
+            
+            const outcomeInputs = newRowElement.querySelectorAll('.outcome-search-input');
+            outcomeInputs.forEach(input => {
+                const parentContainerId = input.closest('.expandable-rows-container').id;
+                let sourceData;
+                if (parentContainerId.includes('implementation')) sourceData = appData.allOutcomesData['Implementation Outcomes'];
+                else if (parentContainerId.includes('service')) sourceData = appData.allOutcomesData['Service Outcomes'];
+                else if (parentContainerId.includes('client')) sourceData = appData.allOutcomesData['Client Outcomes'];
+                
+                if(sourceData) {
+                    setupAutocomplete(input, sourceData, 'name', (item) => {
+                        const definitionDisplay = newRowElement.querySelector('.outcome-definition-display');
+                        if (definitionDisplay) definitionDisplay.textContent = item.definition;
+                    });
+                }
+            });
+
+            const ownerInput = newRowElement.querySelector('.owner-search-input');
+            if (ownerInput) {
+                const teamMembers = getPlanData().tables['team-members-table']?.map(m => ({name: m.name})).filter(m => m.name) || [];
+                setupAutocomplete(ownerInput, teamMembers, 'name', () => {});
+            }
+
+            container.appendChild(newRowElement);
+            updateEmptyState(isTable ? container.parentElement.id : containerId);
+            if (data.strategy) {
+                const def = appData.ericStrategies.find(s => s.name === data.strategy)?.definition;
+                if (def) newRowElement.querySelector('.strategy-definition-display').textContent = def;
+            }
+            if (data.outcome) {
+                const allOutcomes = [...appData.allOutcomesData['Implementation Outcomes'], ...appData.allOutcomesData['Service Outcomes'], ...appData.allOutcomesData['Client Outcomes']];
+                const def = allOutcomes.find(o => o.name === data.outcome)?.definition;
+                if (def) newRowElement.querySelector('.outcome-definition-display').textContent = def;
+            }
+        }
+        
+        function updateEmptyState(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const isTable = container.tagName === 'TABLE';
+            const rowSelector = isTable ? 'tbody tr:not(.no-data-row)' : '.expandable-row, .expandable-card';
+            const contentRows = container.querySelectorAll(rowSelector);
+            const messageElement = container.querySelector('.no-data-message, .no-data-row');
+            if (messageElement) {
+                const displayStyle = contentRows.length === 0 ? (isTable ? 'table-row' : 'block') : 'none';
+                if (messageElement.style.display !== displayStyle) {
+                    messageElement.style.display = displayStyle;
+                }
+            }
+        }
+
+        function populateSelect(select, choices, placeholder = '') {
+            select.innerHTML = '';
+            if (placeholder) select.add(new Option(placeholder, ''));
+            (choices || []).forEach(opt => select.add(new Option(opt, opt)));
+        }
+        
+        function initializeFlippableCards() {
+            document.querySelectorAll('.module-front-matter').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('a, button')) return;
+                    const flipper = card.querySelector('.card-flipper');
+                    if (flipper) {
+                        flipper.classList.toggle('is-flipped');
+                        if (flipper.classList.contains('is-flipped')) {
+                            populateCardBack(card);
+                        }
+                    }
+                });
+            });
+        }
+
+        function populateCardBack(card) {
+            const module = card.dataset.module;
+            const backFace = card.querySelector('.card-face-back');
+            if (!module || !backFace) return;
+
+            const planData = getPlanData();
+            const moduleMap = {
+                determinants: { title: 'Determinants', data: planData.tables['determinants-container'], key: 'determinant', page: 'determinants' },
+                strategies: { title: 'Strategies', data: planData.tables['strategies-container'], key: 'strategy', page: 'strategies' },
+                mechanisms: { title: 'Mechanisms', data: planData.tables['mechanisms-container'], key: 'mechanism', page: 'mechanisms' },
+                outcomes: { title: 'Outcomes', data: [...(planData.tables['implementation-outcomes-container'] || []), ...(planData.tables['service-outcomes-container'] || []), ...(planData.tables['client-outcomes-container'] || [])], key: 'outcome', page: 'outcomes' },
+                protocol: { title: 'Protocol', data: planData.tables['timeline-container'], key: 'task', page: 'protocol' },
+                fidelity: { title: 'Fidelity', data: planData.tables['fidelity-plan-container'], key: 'component', page: 'fidelity' },
+                instruments: { title: 'Instruments', data: planData.tables['instruments-container'], key: 'instrument', page: 'instruments' },
+                adaptations: { title: 'Adaptations', data: planData.tables['adaptations-container'], key: 'modification', page: 'adaptations' },
+                risks: { title: 'Risks', data: planData.tables['risks-container'], key: 'risk', page: 'risks' },
+                opportunities: { title: 'Opportunities', data: planData.tables['opportunities-container'], key: 'opportunity', page: 'opportunities' },
+                summary: { title: 'Summary & Dashboard', data: [{name: 'Open Full Report'}], key: 'name', page: 'summary'}
+            };
+
+            const config = moduleMap[module];
+            if (!config) return;
+
+            let content = `<h4 class="card-back-title">${config.title}</h4>`;
+            const validData = config.data?.filter(item => item && item[config.key]);
+            if (validData && validData.length > 0) {
+                content += `<ul class="card-back-list">${validData.map(item => `<li><a href="#" class="nav-link" data-target="${config.page}">${item[config.key]}</a></li>`).join('')}</ul>`;
+            } else {
+                content += `<div class="card-back-empty"><p>No ${config.title.toLowerCase()} defined yet.</p><a href="#" class="nav-link add-item-from-card" data-target="${config.page}">Add one now</a></div>`;
+            }
+            backFace.innerHTML = content;
+        }
+
+        function setupAutocomplete(input, data, fieldName, onSelect) {
+            const wrapper = input.closest('.autocomplete-wrapper');
+            const resultsContainer = wrapper.querySelector('.autocomplete-results');
+            
+            input.addEventListener('input', () => {
+                const value = input.value.toLowerCase();
+                if (value.length < 1) {
+                    resultsContainer.classList.remove('active');
+                    return;
+                }
+                const filteredData = data.filter(item => item[fieldName].toLowerCase().includes(value));
+                resultsContainer.innerHTML = '';
+                if (filteredData.length > 0) {
+                    filteredData.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'autocomplete-item';
+                        div.textContent = item[fieldName];
+                        div.addEventListener('click', () => {
+                            input.value = item[fieldName];
+                            resultsContainer.classList.remove('active');
+                            onSelect(item);
+                            triggerSave();
+                        });
+                        resultsContainer.appendChild(div);
+                    });
+                    resultsContainer.classList.add('active');
+                } else {
+                    resultsContainer.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) {
+                    resultsContainer.classList.remove('active');
+                }
+            });
+        }
+
+        function updateSidebarTitle() {
+            const projectNameInput = document.getElementById('project-name');
+            const sidebarTitle = document.getElementById('sidebar-title');
+            if (projectNameInput && sidebarTitle) {
+                sidebarTitle.textContent = projectNameInput.value.trim() || 'New Project';
+            }
+        }
+
+        /**
+         * ----------------------------------------------------------------
+         * DASHBOARD AND REPORTING
+         * ----------------------------------------------------------------
+         */
+        function updateAllDashboards() {
+            updateLandingPageDashboards();
+            const activeSection = document.querySelector('.content-section.active');
+            if (activeSection && activeSection.id === 'summary') {
+                updateReportVisuals();
+            }
+        }
+
+        function updateLandingPageDashboards() {
+            const planData = getPlanData();
+            
+            const updateCount = (id, data) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = data ? data.length : 0;
+            };
+            
+            const updateLastLabel = (id, data, key) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const lastItem = data && data.length > 0 ? data[data.length - 1][key] : '';
+                    el.textContent = lastItem || ' ';
+                    el.title = lastItem || '';
+                }
+            };
+            
+            const determinants = planData.tables['determinants-container'];
+            updateCount('determinants-count', determinants);
+            
+            const strategies = planData.tables['strategies-container'];
+            updateCount('strategies-count', strategies);
+            
+            const mechanisms = planData.tables['mechanisms-container'];
+            updateCount('mechanisms-count', mechanisms);
+            
+            const implOutcomes = planData.tables['implementation-outcomes-container'];
+            const servOutcomes = planData.tables['service-outcomes-container'];
+            const clientOutcomes = planData.tables['client-outcomes-container'];
+            updateCount('implementation-outcomes-count', implOutcomes);
+            updateCount('service-outcomes-count', servOutcomes);
+            updateCount('client-outcomes-count', clientOutcomes);
+
+            const tasks = planData.tables['timeline-container'] || [];
+            const completedTasks = tasks.filter(t => t.status === 'Complete');
+            const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date());
+            updateCount('tasks-count', tasks);
+            const tcc = document.getElementById('tasks-complete-count');
+            if (tcc) tcc.textContent = completedTasks.length;
+            const toc = document.getElementById('tasks-overdue-count');
+            if (toc) toc.textContent = overdueTasks.length;
+
+            const fidelity = planData.tables['fidelity-plan-container'];
+            updateCount('fidelity-components-count', fidelity);
+
+            const instruments = planData.tables['instruments-container'];
+            updateCount('instruments-count', instruments);
+
+            const adaptations = planData.tables['adaptations-container'];
+            updateCount('adaptations-count', adaptations);
+
+            const risks = planData.tables['risks-container'] || [];
+            updateCount('risks-count', risks);
+            const hirc = document.getElementById('high-impact-risks-count');
+            if(hirc) hirc.textContent = risks.filter(r => r.impact === 'High').length;
+
+            const opportunities = planData.tables['opportunities-container'] || [];
+            updateCount('opportunities-count', opportunities);
+            const hboc = document.getElementById('high-benefit-opps-count');
+            if(hboc) hboc.textContent = opportunities.filter(o => o.benefit === 'High').length;
+
+            const totalTasks = tasks.length;
+            const progress = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+            const rpk = document.getElementById('report-progress-kpi');
+            if (rpk) rpk.textContent = `${progress}%`;
+            const rok = document.getElementById('report-overdue-kpi');
+            if (rok) rok.textContent = overdueTasks.length;
+            const rrk = document.getElementById('report-risks-kpi');
+            if(rrk) rrk.textContent = risks.filter(r => r.impact === 'High').length;
+        }
+
+        function updateReportVisuals() {
+            const planData = getPlanData();
+            const tasks = planData.tables['timeline-container'] || [];
+            const risks = planData.tables['risks-container'] || [];
+            const opportunities = planData.tables['opportunities-container'] || [];
+
+            const kpiContainer = document.querySelector('#report-kpi-container .kpi-grid');
+            if(kpiContainer) {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(t => t.status === 'Complete').length;
+                const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date()).length;
+                const highImpactRisks = risks.filter(r => r.impact === 'High').length;
+                
+                kpiContainer.innerHTML = `
+                    <div class="kpi-card"><div class="kpi-title">Progress</div><div class="kpi-value">${progress}%</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Tasks Overdue</div><div class="kpi-value">${overdueTasks}</div></div>
+                    <div class="kpi-card"><div class="kpi-title">High-Impact Risks</div><div class="kpi-value">${highImpactRisks}</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Total Tasks</div><div class="kpi-value">${totalTasks}</div></div>
+                `;
+            }
+            
+            updateProgressBar(tasks);
+            updateBubbleChart('risk-bubble-chart', risks, 'risk', 'Likelihood', 'Impact', 'cost');
+            updateBubbleChart('opportunities-chart', opportunities, 'opportunity', 'Feasibility', 'Benefit', 'affected');
+            const statusFilter = document.getElementById('task-status-filter');
+            if (statusFilter) populateSelect(statusFilter, appData.options.status, 'All Statuses');
+            updateInteractiveTaskTable(tasks);
+            
+            const goalText = document.getElementById('summary-goal-text');
+            const goalValue = document.getElementById('primary-goal').value;
+            if(goalText) goalText.textContent = goalValue || 'No goal has been defined yet.';
+        }
+        
+        function updateProgressBar(tasks) {
+            const container = document.getElementById('progress-bar-container');
+            const legend = document.getElementById('progress-bar-legend');
+            if (!container || !legend) return;
+            container.innerHTML = '';
+            legend.innerHTML = '';
+            if (!tasks || tasks.length === 0) return;
+
+            const statusCounts = appData.options.status.reduce((acc, status) => {
+                acc[status] = tasks.filter(t => t.status === status).length;
+                return acc;
+            }, {});
+            
+            const totalTasks = tasks.length;
+            const statusColors = { "Not Started": "#6c757d", "Waiting": "#ffc107", "In Progress": "#0d6efd", "At Risk": "#dc3545", "Complete": "#198754" };
+
+            for (const status of appData.options.status) {
+                const count = statusCounts[status];
+                if (count > 0) {
+                    const percentage = (count / totalTasks) * 100;
+                    const segment = document.createElement('div');
+                    segment.className = 'progress-bar-segment';
+                    segment.style.width = `${percentage}%`;
+                    segment.style.backgroundColor = statusColors[status];
+                    segment.title = `${status}: ${count} task(s)`;
+                    container.appendChild(segment);
+
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `<div class="legend-color-box" style="background-color: ${statusColors[status]}"></div> ${status}`;
+                    legend.appendChild(legendItem);
+                }
+            }
+        }
+        
+        function updateBubbleChart(canvasId, data, labelKey, xKey, yKey, rKey) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (state.chartInstances[canvasId]) {
+                state.chartInstances[canvasId].destroy();
+            }
+
+            const levelMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
+            const chartData = {
+                datasets: [{
+                    label: labelKey.charAt(0).toUpperCase() + labelKey.slice(1) + 's',
+                    data: data.map(item => ({
+                        x: levelMap[item[xKey.toLowerCase()]] || 0,
+                        y: levelMap[item[yKey.toLowerCase()]] || 0,
+                        r: item[rKey] ? Math.max(5, Math.log(parseFloat(item[rKey]) + 1) * 4) : 5,
+                        label: item[labelKey]
+                    })).filter(d => d.x > 0 && d.y > 0),
+                    backgroundColor: 'rgba(192, 4, 4, 0.6)',
+                    borderColor: 'rgba(192, 4, 4, 1)',
+                }]
+            };
+            
+            state.chartInstances[canvasId] = new Chart(ctx, {
+                type: 'bubble',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: { display: true, text: xKey },
+                            ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
+                            min: 0.5, max: 3.5,
+                        },
+                        y: {
+                            title: { display: true, text: yKey },
+                            ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
+                            min: 0.5, max: 3.5,
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label || '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateInteractiveTaskTable(tasks) {
+            const tableBody = document.querySelector('#interactive-task-table tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+
+            const searchTerm = document.getElementById('task-search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('task-status-filter').value;
+
+            let filteredTasks = (tasks || []).filter(task => {
+                const matchesSearch = (task.task || '').toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || task.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            const { key, direction } = state.taskTableSort;
+            filteredTasks.sort((a, b) => {
+                let valA = a[key] || '';
+                let valB = b[key] || '';
+                if (key === 'end') {
+                    valA = valA ? new Date(valA).getTime() : 0;
+                    valB = valB ? new Date(valB).getTime() : 0;
+                }
+                if (valA < valB) return direction === 'asc' ? -1 : 1;
+                if (valA > valB) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            if (filteredTasks.length === 0) {
+                tableBody.innerHTML = `<tr class="no-data-row"><td colspan="4" class="no-data-message">No tasks match the current filters.</td></tr>`;
+                return;
+            }
+
+            filteredTasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.task || ''}</td>
+                    <td>${task.owner || ''}</td>
+                    <td>${task.end || ''}</td>
+                    <td>${task.status || ''}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        /**
+         * ----------------------------------------------------------------
+         * EVENT LISTENERS
+         * ----------------------------------------------------------------
+         */
+        function setupEventListeners() {
+            document.body.addEventListener('click', e => {
+                const navLink = e.target.closest('.nav-link');
+                if (navLink) {
+                    e.preventDefault();
+                    const targetId = navLink.dataset.target;
+                    if (targetId) {
+                        navigateTo(targetId);
+                    } else if (navLink.classList.contains('add-item-from-card')) {
+                        const pageTarget = navLink.dataset.target;
+                        navigateTo(pageTarget);
+                        const containerId = document.getElementById(pageTarget)?.querySelector('.expandable-rows-container')?.id;
+                        if (containerId) {
+                            addRow(containerId);
+                        }
+                    }
+                }
+
+                if (e.target.matches('.add-row-btn')) {
+                    addRow(e.target.dataset.table);
+                }
+
+                if (e.target.matches('.delete-btn')) {
+                    const row = e.target.closest('tr, .expandable-row, .expandable-card');
+                    if (row) {
+                        const container = row.parentElement;
+                        const containerId = container.id || (container.tagName === 'TBODY' ? container.parentElement.id : null);
+                        row.remove();
+                        if (containerId) {
+                            updateEmptyState(containerId);
+                            triggerSave();
+                        }
+                    }
+                }
+
+                const expandableHeader = e.target.closest('.expandable-row-header, .expandable-card-header');
+                if (expandableHeader && !e.target.closest('input, button, a')) {
+                    expandableHeader.parentElement.classList.toggle('expanded');
+                }
+
+                const sortableHeader = e.target.closest('.sortable-th');
+                if (sortableHeader) {
+                    const key = sortableHeader.dataset.sortKey;
+                    if (state.taskTableSort.key === key) {
+                        state.taskTableSort.direction = state.taskTableSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        state.taskTableSort.key = key;
+                        state.taskTableSort.direction = 'asc';
+                    }
+                    document.querySelectorAll('.sortable-th').forEach(th => {
+                        th.classList.remove('sorted-asc', 'sorted-desc');
+                    });
+                    sortableHeader.classList.add(state.taskTableSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                    updateInteractiveTaskTable(getPlanData().tables['timeline-container'] || []);
+                }
+            });
+
+            document.body.addEventListener('input', e => {
+                const target = e.target;
+                if (target.closest('.content-section')) {
+                    if (target.id === 'project-name') {
+                        updateSidebarTitle();
+                    }
+                    if (target.id === 'task-search-input' || target.id === 'task-status-filter') {
+                        updateInteractiveTaskTable(getPlanData().tables['timeline-container'] || []);
+                    } else if (target.id === 'glossary-search') {
+                        const filter = target.value.toUpperCase();
+                        document.querySelectorAll('#glossary-container .glossary-card').forEach(card => {
+                            const termText = card.querySelector('.glossary-term').textContent.toUpperCase();
+                            const definitionText = card.querySelector('.glossary-definition').textContent.toUpperCase();
+                            card.style.display = (termText.includes(filter) || definitionText.includes(filter)) ? "" : "none";
+                        });
+                    } else {
+                       triggerSave();
+                    }
+                }
+            });
+
+            document.body.addEventListener('change', e => {
+                if (e.target.tagName === 'SELECT' && e.target.closest('.content-section')) {
+                    triggerSave();
+                }
+            });
+        }
+        
+        // --- Start The Application ---
+        initializeApp();
+    });
+    </script>
 </body>
 </html>
