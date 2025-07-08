@@ -234,6 +234,10 @@
             margin: 0;
         }
 
+        .card-back-list li {
+            margin-bottom: 0.5rem;
+        }
+
         .card-back-list li a {
             display: block;
             padding: 0.5rem 0.75rem;
@@ -291,7 +295,7 @@
         }
 
         .module-dashboard {
-            padding: 1rem 1.5rem;
+            padding: 1.5rem;
             background-color: var(--hover-bg);
             border-top: 1px solid var(--medium-gray);
             display: flex;
@@ -299,7 +303,6 @@
             justify-content: space-around;
             flex-wrap: wrap;
             align-items: center;
-            min-height: 80px;
         }
         .dashboard-stat {
             text-align: center;
@@ -1580,16 +1583,14 @@
          * UI AND HELPER FUNCTIONS
          * ----------------------------------------------------------------
          */
-        function navigateTo(targetId, isInitial = false) {
+        function navigateTo(targetId, isInitial = false, itemIndex = null) {
             document.querySelectorAll('.card-flipper.is-flipped').forEach(flipper => flipper.classList.remove('is-flipped'));
 
             const allLinks = document.querySelectorAll('.sidebar-nav .nav-link');
             allLinks.forEach(nav => nav.classList.remove('active'));
             
-            let finalTargetId = targetId;
             const pageConfig = state.pageConfig[targetId];
             if (pageConfig && pageConfig.back) {
-                // Find the main nav link that corresponds to the landing page
                 const mainNavLink = document.querySelector(`.nav-link[data-target="${pageConfig.back}"]`);
                 if(mainNavLink) mainNavLink.classList.add('active');
             } else {
@@ -1600,6 +1601,18 @@
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.toggle('active', section.id === targetId);
             });
+
+            if (itemIndex !== null && itemIndex !== undefined) {
+                const targetPage = document.getElementById(targetId);
+                const items = targetPage.querySelectorAll('.expandable-card, .expandable-row');
+                if (items && items[itemIndex]) {
+                    const itemToExpand = items[itemIndex];
+                    if (!itemToExpand.classList.contains('expanded')) {
+                        itemToExpand.classList.add('expanded');
+                    }
+                    setTimeout(() => itemToExpand.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+                }
+            }
 
             if (!isInitial) {
                 updateAllDashboards();
@@ -1789,10 +1802,10 @@
                  if (module === 'summary') {
                      content += `<div class="card-back-empty"><button class="add-row-btn nav-link" data-target="${config.page}">${config.buttonText}</button></div>`;
                  } else {
-                    content += `<ul class="card-back-list">${validData.map(item => `<li><a href="#" class="nav-link" data-target="${config.page}">${item[config.key]}</a></li>`).join('')}</ul>`;
+                    content += `<ul class="card-back-list">${validData.map((item, index) => `<li><a href="#" class="nav-link" data-target="${config.page}" data-item-index="${index}">${item[config.key]}</a></li>`).join('')}</ul>`;
                  }
             } else {
-                 content += `<div class="card-back-empty"><p>No ${config.title.toLowerCase()} defined yet.</p><button class="add-row-btn add-item-from-card" data-target="${config.page}">${config.buttonText}</button></div>`;
+                 content += `<div class="card-back-empty"><p>No ${config.title.toLowerCase()} defined yet.</p><button class="add-row-btn add-item-from-card nav-link" data-target="${config.page}">${config.buttonText}</button></div>`;
             }
             backFace.innerHTML = content;
         }
@@ -2115,24 +2128,18 @@
                 if (navLink) {
                     e.preventDefault();
                     const targetId = navLink.dataset.target;
+                    const itemIndex = navLink.dataset.itemIndex;
                     
-                    if (targetId) {
-                        navigateTo(targetId);
-                    }
+                    navigateTo(targetId, false, itemIndex);
 
                     if (navLink.classList.contains('add-item-from-card')) {
-                        const pageTarget = navLink.dataset.target;
-                        const pageConfig = state.pageConfig[pageTarget];
-                        let containerId;
-                        if(pageConfig) {
-                            containerId = pageConfig.containerId;
-                        }
+                        const pageConfig = state.pageConfig[targetId];
+                        const containerId = pageConfig?.containerId;
                         
                         if (containerId) {
                             addRow(containerId);
-                        } else {
-                            // Fallback for outcomes page
-                            const section = document.getElementById(pageTarget);
+                        } else { // Fallback for outcomes page
+                            const section = document.getElementById(targetId);
                             const firstContainer = section?.querySelector('.expandable-rows-container');
                             if (firstContainer) {
                                 addRow(firstContainer.id);
@@ -2141,7 +2148,7 @@
                     }
                 }
 
-                if (e.target.matches('.add-row-btn')) {
+                if (e.target.matches('.table-actions .add-row-btn')) {
                     addRow(e.target.dataset.table);
                 }
 
