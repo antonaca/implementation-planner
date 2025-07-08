@@ -76,15 +76,6 @@ body {
     min-height: 100vh;
 }
 
-.module-dashboard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centers vertically */
-  align-items: center;     /* Centers horizontally */
-  flex-grow: 1;            /* Allows the element to fill available space */
-  text-align: center;      /* Ensures text inside is centered */
-}
-
 /* --- Sidebar Navigation --- */
 .sidebar {
     width: 260px;
