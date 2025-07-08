@@ -606,7 +606,7 @@
         .legend-color-box { width: 12px; height: 12px; border-radius: 3px; }
 
         /* --- KPI Cards --- */
-        #report-kpi-container { padding: 0; margin-bottom: 2rem; }
+        #report-kpi-container { padding-bottom: 1rem; margin-bottom: 1rem; }
         .kpi-grid { 
             display: grid; 
             gap: 1.5rem; 
@@ -714,7 +714,7 @@
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: stretch;
             padding: 0.5rem;
             margin: 0 -0.5rem;
@@ -731,6 +731,7 @@
             font-size: 2rem;
             font-weight: bold;
             flex-shrink: 0;
+            padding: 0 0.5rem;
         }
 
         /* --- Task Table Sorting --- */
@@ -1342,6 +1343,7 @@
                 },
                 'log-landing': {
                     title: 'Implementation Log',
+                    horizontal: true,
                     cards: [
                         { module: 'adaptations', title: 'Adaptations', summary: 'The <b>Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS)</b> documents changes to the protocol (i.e., what was changed, why, and how).', stats: [{id: 'adaptations-count', label: 'Logged'}] },
                         { module: 'risks', title: 'Risks', summary: 'A structured log to capture potential <b>risks</b> to the implementation process, including their <i>impact</i> on implementation, <i>likelihood</i> of occurring, and space to develop <i>mitigation</i> strategies.', stats: [{id: 'risks-count', label: 'Logged'}, {id: 'high-impact-risks-count', label: 'High Impact'}] },
@@ -1436,7 +1438,7 @@
                             <div class="planning-module summary-section">
                                 <div class="planning-module-header"><h4>Performance Dashboard</h4><p>An overview of key performance indicators and project progress.</p></div>
                                 <div class="planning-module-content">
-                                    <div id="report-kpi-container"><div class="kpi-grid"></div></div>
+                                    <div id="report-kpi-container" class="horizontal-scroll-container"></div>
                                     <div class="chart-card progress-card" style="margin-top: 2rem;">
                                         <h5>Activities Progress</h5>
                                         <div id="progress-bar-container" class="progress-bar-container"></div>
@@ -1723,7 +1725,7 @@
             
             const outcomeInputs = newRowElement.querySelectorAll('.outcome-search-input');
             outcomeInputs.forEach(input => {
-                const parentContainerId = input.closest('.expandable-rows-container').id;
+                const parentContainerId = containerId; // FIX: Use the containerId passed to the function
                 let sourceData;
                 if (parentContainerId.includes('implementation')) sourceData = appData.allOutcomesData['Implementation Outcomes'];
                 else if (parentContainerId.includes('service')) sourceData = appData.allOutcomesData['Service Outcomes'];
@@ -1820,7 +1822,7 @@
             
             if (validData && validData.length > 0) {
                  if (module === 'summary') {
-                     content += `<div class="card-back-empty"><button class="add-row-btn nav-link" data-target="${config.page}">${config.buttonText}</button></div>`;
+                      content += `<div class="card-back-empty"><button class="add-row-btn nav-link" data-target="${config.page}">${config.buttonText}</button></div>`;
                  } else {
                     content += `<ul class="card-back-list">${validData.map((item, index) => `<li><a href="#" class="nav-link" data-target="${config.page}" data-item-index="${index}">${item[config.key]}</a></li>`).join('')}</ul>`;
                  }
@@ -1917,10 +1919,15 @@
             const tasks = (planData.tables['timeline-container'] || []).filter(t => t.task && t.task.trim() !== '');
             const completedTasks = tasks.filter(t => t.status === 'Complete').length;
             const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date()).length;
+            const overdueColor = overdueTasks > 0 ? 'var(--red)' : 'var(--green)';
+
             const tcc = document.getElementById('tasks-complete-count');
             if (tcc) tcc.textContent = completedTasks;
             const toc = document.getElementById('tasks-overdue-count');
-            if(toc) toc.textContent = overdueTasks;
+            if(toc) {
+                toc.textContent = overdueTasks;
+                toc.style.color = overdueColor;
+            }
 
             const risks = (planData.tables['risks-container'] || []).filter(r => r.risk && r.risk.trim() !== '');
             const highImpactRisks = risks.filter(r => r.impact === 'High').length;
@@ -1937,7 +1944,10 @@
             const rpk = document.getElementById('report-progress-kpi');
             if (rpk) rpk.textContent = `${progress}%`;
             const rok = document.getElementById('report-overdue-kpi');
-            if (rok) rok.textContent = overdueTasks;
+            if (rok) {
+                rok.textContent = overdueTasks;
+                rok.style.color = overdueColor;
+            }
             const rrk = document.getElementById('report-risks-kpi');
             if(rrk) rrk.textContent = highImpactRisks;
         }
@@ -1948,19 +1958,21 @@
             const risks = (planData.tables['risks-container'] || []).filter(r => r.risk && r.risk.trim() !== '');
             const opportunities = (planData.tables['opportunities-container'] || []).filter(o => o.opportunity && o.opportunity.trim() !== '');
 
-            const kpiContainer = document.querySelector('#summary .kpi-grid');
+            const kpiContainer = document.querySelector('#summary #report-kpi-container');
             if(kpiContainer) {
                 const totalTasks = tasks.length;
                 const completedTasks = tasks.filter(t => t.status === 'Complete').length;
                 const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
                 const overdueTasks = tasks.filter(t => t.status !== 'Complete' && t.end && new Date(t.end) < new Date()).length;
                 const highImpactRisks = risks.filter(r => r.impact === 'High').length;
+                const highBenefitOpps = opportunities.filter(o => o.benefit === 'High').length;
+                const overdueColor = overdueTasks > 0 ? 'var(--red)' : 'var(--green)';
                 
                 kpiContainer.innerHTML = `
-                    <div class="kpi-card"><div class="kpi-title">Progress</div><div class="kpi-value">${progress}%</div></div>
-                    <div class="kpi-card"><div class="kpi-title">Tasks Overdue</div><div class="kpi-value">${overdueTasks}</div></div>
-                    <div class="kpi-card"><div class="kpi-title">High-Impact Risks</div><div class="kpi-value">${highImpactRisks}</div></div>
-                    <div class="kpi-card"><div class="kpi-title">Total Tasks</div><div class="kpi-value">${totalTasks}</div></div>
+                    <div class="kpi-card" style="flex: 0 0 200px;"><div class="kpi-title">Progress</div><div class="kpi-value">${progress}%</div></div>
+                    <div class="kpi-card" style="flex: 0 0 200px;"><div class="kpi-title">Tasks Overdue</div><div class="kpi-value" style="color: ${overdueColor};">${overdueTasks}</div></div>
+                    <div class="kpi-card" style="flex: 0 0 200px;"><div class="kpi-title">High-Impact Risks</div><div class="kpi-value">${highImpactRisks}</div></div>
+                    <div class="kpi-card" style="flex: 0 0 200px;"><div class="kpi-title">High-Benefit Opportunities</div><div class="kpi-value">${highBenefitOpps}</div></div>
                 `;
             }
             
@@ -2027,6 +2039,9 @@
             }
             const finalLabel = pluralLabelKey.charAt(0).toUpperCase() + pluralLabelKey.slice(1);
 
+            const isOppChart = canvasId === 'opportunities-chart';
+            const bgColor = isOppChart ? 'rgba(46, 125, 50, 0.6)' : 'rgba(192, 4, 4, 0.6)';
+            const bdColor = isOppChart ? 'rgba(46, 125, 50, 1)' : 'rgba(192, 4, 4, 1)';
 
             const levelMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
             const chartData = {
@@ -2038,8 +2053,8 @@
                         r: item[rKey] ? Math.max(5, Math.log(parseFloat(item[rKey]) + 1) * 4) : 5,
                         label: item[labelKey]
                     })).filter(d => d.x > 0 && d.y > 0),
-                    backgroundColor: 'rgba(192, 4, 4, 0.6)',
-                    borderColor: 'rgba(192, 4, 4, 1)',
+                    backgroundColor: bgColor,
+                    borderColor: bdColor,
                 }]
             };
             
@@ -2062,6 +2077,11 @@
                         }
                     },
                     plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                            }
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
