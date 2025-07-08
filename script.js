@@ -3,9 +3,7 @@
  * It fetches initial dropdown and glossary data from data.json.
  */
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // #region STATE AND INITIALIZATION
-    const state = {
+        const state = {
         teamMembers: [],
         coreComponents: [],
         sortState: { key: 'end', direction: 'asc' }
@@ -28,9 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("Could not load essential app data (data.json). The app cannot function.");
         }
     }
-    // #endregion
 
-    // #region DATA PERSISTENCE (LOCAL STORAGE)
     function getTableData(id) {
         const container = document.getElementById(id);
         if (!container) return [];
