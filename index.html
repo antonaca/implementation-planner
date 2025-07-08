@@ -1766,17 +1766,17 @@
 
             const planData = getPlanData();
             const moduleMap = {
-                determinants: { title: 'Determinants', data: planData.tables['determinants-container'], key: 'determinant', page: 'determinants' },
-                strategies: { title: 'Strategies', data: planData.tables['strategies-container'], key: 'strategy', page: 'strategies' },
-                mechanisms: { title: 'Mechanisms', data: planData.tables['mechanisms-container'], key: 'mechanism', page: 'mechanisms' },
-                outcomes: { title: 'Outcomes', data: [...(planData.tables['implementation-outcomes-container'] || []), ...(planData.tables['service-outcomes-container'] || []), ...(planData.tables['client-outcomes-container'] || [])], key: 'outcome', page: 'outcomes' },
-                protocol: { title: 'Protocol', data: planData.tables['timeline-container'], key: 'task', page: 'protocol' },
-                fidelity: { title: 'Fidelity', data: planData.tables['fidelity-plan-container'], key: 'component', page: 'fidelity' },
-                instruments: { title: 'Instruments', data: planData.tables['instruments-container'], key: 'instrument', page: 'instruments' },
-                adaptations: { title: 'Adaptations', data: planData.tables['adaptations-container'], key: 'modification', page: 'adaptations' },
-                risks: { title: 'Risks', data: planData.tables['risks-container'], key: 'risk', page: 'risks' },
-                opportunities: { title: 'Opportunities', data: planData.tables['opportunities-container'], key: 'opportunity', page: 'opportunities' },
-                summary: { title: 'Summary & Dashboard', data: [{name: 'Open Full Report'}], key: 'name', page: 'summary'}
+                determinants: { title: 'Determinants', data: planData.tables['determinants-container'], key: 'determinant', page: 'determinants', buttonText: 'Add Determinant' },
+                strategies: { title: 'Strategies', data: planData.tables['strategies-container'], key: 'strategy', page: 'strategies', buttonText: 'Add Strategy' },
+                mechanisms: { title: 'Mechanisms', data: planData.tables['mechanisms-container'], key: 'mechanism', page: 'mechanisms', buttonText: 'Add Mechanism' },
+                outcomes: { title: 'Outcomes', data: [...(planData.tables['implementation-outcomes-container'] || []), ...(planData.tables['service-outcomes-container'] || []), ...(planData.tables['client-outcomes-container'] || [])], key: 'outcome', page: 'outcomes', buttonText: 'Add Outcome' },
+                protocol: { title: 'Protocol', data: planData.tables['timeline-container'], key: 'task', page: 'protocol', buttonText: 'Add Activity' },
+                fidelity: { title: 'Fidelity', data: planData.tables['fidelity-plan-container'], key: 'component', page: 'fidelity', buttonText: 'Add Component' },
+                instruments: { title: 'Instruments', data: planData.tables['instruments-container'], key: 'instrument', page: 'instruments', buttonText: 'Add Instrument' },
+                adaptations: { title: 'Adaptations', data: planData.tables['adaptations-container'], key: 'modification', page: 'adaptations', buttonText: 'Add Adaptation' },
+                risks: { title: 'Risks', data: planData.tables['risks-container'], key: 'risk', page: 'risks', buttonText: 'Add Risk' },
+                opportunities: { title: 'Opportunities', data: planData.tables['opportunities-container'], key: 'opportunity', page: 'opportunities', buttonText: 'Add Opportunity' },
+                summary: { title: 'Summary & Dashboard', data: [{name: 'Open Full Report'}], key: 'name', page: 'summary', buttonText: 'Open Full Report'}
             };
 
             const config = moduleMap[module];
@@ -1784,10 +1784,15 @@
 
             let content = `<h4 class="card-back-title">${config.title}</h4>`;
             const validData = config.data?.filter(item => item && item[config.key]);
+            
             if (validData && validData.length > 0) {
-                content += `<ul class="card-back-list">${validData.map(item => `<li><a href="#" class="nav-link" data-target="${config.page}">${item[config.key]}</a></li>`).join('')}</ul>`;
+                 if (module === 'summary') {
+                     content += `<div class="card-back-empty"><button class="add-row-btn nav-link" data-target="${config.page}">${config.buttonText}</button></div>`;
+                 } else {
+                    content += `<ul class="card-back-list">${validData.map(item => `<li><a href="#" class="nav-link" data-target="${config.page}">${item[config.key]}</a></li>`).join('')}</ul>`;
+                 }
             } else {
-                content += `<div class="card-back-empty"><p>No ${config.title.toLowerCase()} defined yet.</p><a href="#" class="nav-link add-item-from-card" data-target="${config.page}">Add one now</a></div>`;
+                 content += `<div class="card-back-empty"><p>No ${config.title.toLowerCase()} defined yet.</p><button class="add-row-btn add-item-from-card" data-target="${config.page}">${config.buttonText}</button></div>`;
             }
             backFace.innerHTML = content;
         }
@@ -2110,14 +2115,28 @@
                 if (navLink) {
                     e.preventDefault();
                     const targetId = navLink.dataset.target;
+                    
                     if (targetId) {
                         navigateTo(targetId);
-                    } else if (navLink.classList.contains('add-item-from-card')) {
+                    }
+
+                    if (navLink.classList.contains('add-item-from-card')) {
                         const pageTarget = navLink.dataset.target;
-                        navigateTo(pageTarget);
-                        const containerId = document.getElementById(pageTarget)?.querySelector('.expandable-rows-container')?.id;
+                        const pageConfig = state.pageConfig[pageTarget];
+                        let containerId;
+                        if(pageConfig) {
+                            containerId = pageConfig.containerId;
+                        }
+                        
                         if (containerId) {
                             addRow(containerId);
+                        } else {
+                            // Fallback for outcomes page
+                            const section = document.getElementById(pageTarget);
+                            const firstContainer = section?.querySelector('.expandable-rows-container');
+                            if (firstContainer) {
+                                addRow(firstContainer.id);
+                            }
                         }
                     }
                 }
