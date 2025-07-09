@@ -2074,17 +2074,29 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: {
-                            title: { display: true, text: xKey },
-                            ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
-                            min: 0.5, max: 3.5,
-                        },
-                        y: {
-                            title: { display: true, text: yKey },
-                            ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
-                            min: 0.5, max: 3.5,
-                        }
-                    },
+    x: {
+        title: { 
+            display: true, 
+            text: xKey,
+            font: {
+                weight: 'bold'
+            }
+        },
+        ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
+        min: 0.5, max: 3.5,
+    },
+    y: {
+        title: { 
+            display: true, 
+            text: yKey,
+            font: {
+                weight: 'bold'
+            }
+        },
+        ticks: { callback: (value) => Object.keys(levelMap).find(key => levelMap[key] === value) },
+        min: 0.5, max: 3.5,
+    }
+}
                     plugins: {
                         legend: {
                             labels: {
