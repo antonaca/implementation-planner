@@ -80,7 +80,3 @@ The [hivprep-plan](https://antonaca.github.io/hivprep-plan) repository demonstra
 ## Support
 
 If you have questions or need support, please submit an Issue in this repository or send an email to [antonaccio@brown.edu](mailto:antonaccio@brown.edu).
-
----
-
-**Empower your team to plan and implement with confidence and clarity!**
