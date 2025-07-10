@@ -73,7 +73,7 @@ For each section of the implementation:
 - **Transparency:** Document decisions and changes directly within the plan.
 - **Adaptation:** Regularly review and update the plan as implementation progresses.
 
-## Example: HIV PrEP Implementation Plan
+## Example: Community HIV PrEP Protocol Roll-Out Plan
 
 The [hivprep-plan](https://antonaca.github.io/hivprep-plan) repository demonstrates how to use Implementation Planner for a health project. Review it for inspiration on customizing the templates for your context.
 
