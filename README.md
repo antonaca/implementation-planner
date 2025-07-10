@@ -67,7 +67,7 @@ For each section of the implementation:
 - Invite team members as collaborators in your repository.
 - Use GitHub Issues or Discussions to manage questions, changes, and feedback.
 
-## ✅ **Best Practices**
+## 🧙🏻‍♀️ **Best Practices**
 
 - **Consistency:** Use the same structure for all projects to enable comparison and reuse.
 - **Transparency:** Document decisions and changes directly within the plan.
