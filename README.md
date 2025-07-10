@@ -1,6 +1,6 @@
 # 🚀 **Implementation Planner**
 
-This is a practical tool designed for implementation researchers and practitioners who need to systematically plan, adapt, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases like the [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) example.
+This is a practical tool designed for implementation researchers and practitioners who need to systematically plan, adapt, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases like the [HIV PrEP Protocol Roll-Out](https://antonaca.github.io/hivprep-plan) example.
 
 ## 🤔 **Who is this for?**
 
