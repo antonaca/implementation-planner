@@ -12,9 +12,9 @@ This tool is designed for:
 ## 🔧 **What does it do?**
 
 This tool offers a structured way to:
-- Break down your implementation project into actionable steps
+- Break down an implementation project into actionable steps
 - Identify implementation determinants, select appropriate strategies, specify mechanisms, and document outcomes
-- Track progress and adapt plans as your project evolves
+- Track progress and adapt plans as a project evolves
 - Reuse templates for new projects or adapt from existing plans (e.g., see the [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository for an applied example)
 
 ## 👷 **How to Use the Implementation Planner**
@@ -48,7 +48,7 @@ _Refer to an Example_
 - Explore [HIV PrEP Protocol Roll-Out](https://antonaca.github.io/hivprep-plan) to see how the planner could be customized and applied in a real-world implementation effort.
 - Use it as a guide or starting point.
 
-### 4. Populate Your Plan
+### 4. Populate the Plan
 
 For each section of the implementation:
 
