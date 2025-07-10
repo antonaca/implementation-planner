@@ -17,7 +17,7 @@ This tool applies the Implementation Research Logic Model (IRLM) and Framework f
 - Track progress and adapt plans as a project evolves
 - Reuse templates for new projects or adapt from existing plans (e.g., see the [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository for an applied example)
 
-## 🏗️ **How to Use this Tool**
+## 🏗️ **How do I use it?**
 
 ### 1. Clone or Fork this Repository
 
