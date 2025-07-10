@@ -1,6 +1,6 @@
 # Implementation Planner
 
-_Implementation Planner_ is a practical tool designed for implementation practitioners who need to systematically plan, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases—such as the [hivprep-plan](https://github.com/antonaca/hivprep-plan) example.
+This is a practical tool designed for implementation researchers and practitioners who need to systematically plan, adapt, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases like the [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) example.
 
 ## Who is this for?
 
@@ -30,7 +30,7 @@ git clone https://github.com/antonaca/implementation-planner.git
 ### 2. Understand the Structure
 
 - The planner is organized using HTML files and folders representing different sections or phases of implementation.
-- Typical sections might include: _Preparation_, _Implementation_, _Evaluation_, _Sustainability_.
+- Typical sections might include: _Exploration_, _Preparation_, _Implementation_, _Sustainment_.
 - Each phase contains templates for tasks, responsible parties, timelines, and documentation.
 
 ### 3. Create a New Implementation Plan
@@ -45,7 +45,7 @@ _Use This Template_ (recommended for new projects)
 **Option B:**  
 _Refer to an Example_
 
-- Study [hivprep-plan](https://github.com/antonaca/hivprep-plan) to see how the planner has been customized and completed for a real-world project.
+- Explore [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) to see how the planner has been customized and completed for a real-world project.
 - Use it as a guide or starting point.
 
 ### 4. Populate Your Plan
