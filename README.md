@@ -11,7 +11,7 @@ This tool is designed for:
 
 ## 🔧 **What does it do?**
 
-This tool offers a structured way to:
+This tool offers a structured way, built on the Implementation Research Logic Model (IRLM) and the Framework for Reporting Adaptations and Modifications to Evidence-based Implementation Strategies (FRAME-IS) to:
 - Break down an implementation project into actionable steps
 - Identify implementation determinants, select appropriate strategies, specify mechanisms, and document outcomes
 - Track progress and adapt plans as a project evolves
