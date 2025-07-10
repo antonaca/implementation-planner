@@ -75,11 +75,11 @@ For each section of the implementation:
 
 ## Example: HIV PrEP Implementation Plan
 
-The [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository demonstrates how to use Implementation Planner for a health project. Review it for inspiration on customizing the templates for your context.
+The [hivprep-plan](https://antonaca.github.io/hivprep-plan) repository demonstrates how to use Implementation Planner for a health project. Review it for inspiration on customizing the templates for your context.
 
 ## Support
 
-If you have questions or need support, please submit an Issue in this repository.
+If you have questions or need support, please submit an Issue in this repository or send an email to [antonaccio@brown.edu](mailto:antonaccio@brown.edu).
 
 ---
 
