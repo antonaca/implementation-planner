@@ -45,7 +45,7 @@ _Use This Template_ (recommended for new projects)
 **Option B:**  
 _Refer to an Example_
 
-- Explore [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) to see how the planner could be customized and applied in a real-world implementation effort.
+- Explore [HIV PrEP Protocol Roll-Out](https://antonaca.github.io/hivprep-plan) to see how the planner could be customized and applied in a real-world implementation effort.
 - Use it as a guide or starting point.
 
 ### 4. Populate Your Plan
