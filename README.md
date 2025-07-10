@@ -6,7 +6,7 @@ This is a practical tool designed for implementation researchers and practitione
 
 This tool is designed for:
 - Implementation practitioners
-- Project managers in health, education, or social sectors
+- Researchers and project managers in health, education, or social sectors
 - Teams seeking to improve the fidelity and documentation of their implementation processes
 
 ## What does it do?
@@ -45,7 +45,7 @@ _Use This Template_ (recommended for new projects)
 **Option B:**  
 _Refer to an Example_
 
-- Explore [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) to see how the planner has been customized and completed for a real-world project.
+- Explore [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) to see how the planner could be customized and applied in a real-world implementation effort.
 - Use it as a guide or starting point.
 
 ### 4. Populate Your Plan
@@ -83,4 +83,4 @@ If you have questions or need support, please submit an Issue in this repository
 
 ---
 
-**Empower your team to plan and deliver implementation projects with confidence and clarity!**
+**Empower your team to plan and implement with confidence and clarity!**
