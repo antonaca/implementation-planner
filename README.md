@@ -2,7 +2,7 @@
 
 This is a practical tool designed for implementation researchers and practitioners who need to systematically plan, adapt, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases like the [HIV PrEP Protocol Roll-Out](https://antonaca.github.io/hivprep-plan) example.
 
-## 🤔 **Who is this for?**
+## 👷 **Who is this for?**
 
 This tool is designed for:
 - Implementation practitioners
@@ -17,7 +17,7 @@ This tool applies the Implementation Research Logic Model (IRLM) and Framework f
 - Track progress and adapt plans as a project evolves
 - Reuse templates for new projects or adapt from existing plans (e.g., see the [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository for an applied example)
 
-## 👷 **How to Use the Implementation Planner**
+## 🏗️ **How to Use this Tool**
 
 ### 1. Clone or Fork this Repository
 
