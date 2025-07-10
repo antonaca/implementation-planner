@@ -1,6 +1,6 @@
-# Implementation Planning Tool
-Welcome! This guide is designed to help you use the Implementation Planning & Tracking Tool. This tool will help you design, plan, and monitor your implementation projects from start to finish.
-## What is this Tool?
+# 🚀 Implementation Planning Tool
+This guide is designed to help you use the Implementation Planning & Tracking Tool. This tool will help you design, plan, and monitor your implementation projects from start to finish.
+## 👷 What is this Tool?
 This is a comprehensive, browser-based tool for creating a detailed implementation plan based on established implementation science frameworks. It helps you:
 - Structure your thinking using a logic model.
 - Select and specify evidence-based implementation strategies.
@@ -10,7 +10,7 @@ This is a comprehensive, browser-based tool for creating a detailed implementati
 
 Important Note on Saving: Your work is saved automatically and stored directly within your web browser. This means your data is private to you and available when you reopen the file on the same computer and in the same browser. However, you will not be able to access this plan on a different computer.
 
-## Navigating the Tool
+## 🔧 Navigating the Tool
 The main navigation is on the sidebar to the left. Each section represents a key part of your implementation plan.
 
 ### 1. Overview
@@ -45,7 +45,7 @@ This section provides a high-level summary of your entire project.
 ### 6. Glossary
 If you encounter any unfamiliar terms (like "determinant" or "fidelity"), the Glossary provides definitions for key concepts used throughout the tool.
 
-## How to Get Started
+## 🏗️ How to Get Started
 1. Open the index.html file in your web browser. You will see a pre-populated example project to guide you.
 2. Start in the "Overview" tab. Change the project title, goal, and team members to match your own project.
 3. Navigate to the "Model" tab. Click on the cards to flip them and see the lists of items. Use the "Add..." buttons to start defining your own determinants, strategies, and outcomes.
@@ -54,7 +54,7 @@ If you encounter any unfamiliar terms (like "determinant" or "fidelity"), the Gl
 6. Visit the "Report" tab at any time to see a dashboard of your progress.
 
 ---
-PRO Version of the ReadMe (Deploying the app yourself)
+PRO Version of ReadMe (Deploying the app yourself!)
 
 # 🚀 **Implementation Planner**
 
