@@ -81,5 +81,10 @@ The [hivprep-plan](https://antonaca.github.io/hivprep-plan) repository demonstra
 
 If you have questions or need support, please submit an Issue in this repository or send an email to [antonaccio@brown.edu](mailto:antonaccio@brown.edu).
 
+
+
+
+---
 ©️ 2025 Cara M. Antonaccio, PhD MSPH
+
 This program is free software. You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
