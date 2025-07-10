@@ -1,15 +1,15 @@
-# 🚀 Implementation Planner
+# 🚀 **Implementation Planner**
 
 This is a practical tool designed for implementation researchers and practitioners who need to systematically plan, adapt, document, and manage complex implementation projects. The tool provides a structured, repeatable framework that makes it easy to adapt for different use cases like the [HIV PrEP Protocol Roll-Out](https://github.com/antonaca/hivprep-plan) example.
 
-## 🤔 Who is this for?
+## 🤔 **Who is this for?**
 
 This tool is designed for:
 - Implementation practitioners
 - Researchers and project managers in health, education, or social sectors
 - Teams seeking to improve the fidelity and documentation of their implementation processes
 
-## 🔧 What does it do?
+## 🔧 **What does it do?**
 
 Implementation Planner helps you:
 - Break down your implementation project into actionable steps
@@ -17,7 +17,7 @@ Implementation Planner helps you:
 - Track progress and update plans as your project evolves
 - Reuse templates for new projects or adapt from existing plans (e.g., see the [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository for an applied example)
 
-## 👷 How to Use the Implementation Planner
+## 👷 **How to Use the Implementation Planner**
 
 ### 1. Clone or Fork this Repository
 
@@ -67,16 +67,16 @@ For each section of the implementation:
 - Invite team members as collaborators in your repository.
 - Use GitHub Issues or Discussions to manage questions, changes, and feedback.
 
-## ✅ Best Practices
+## ✅ **Best Practices**
 
 - **Consistency:** Use the same structure for all projects to enable comparison and reuse.
 - **Transparency:** Document decisions and changes directly within the plan.
 - **Adaptation:** Regularly review and update the plan as implementation progresses.
 
-## 👀 Example: Community HIV PrEP Protocol Roll-Out Plan
+## 👀 **Example: Community HIV PrEP Protocol Roll-Out Plan**
 
 The [hivprep-plan](https://antonaca.github.io/hivprep-plan) repository demonstrates how to use Implementation Planner for a health project. Review it for inspiration on customizing the templates for your context.
 
-## 🗣️ Support
+## 🗣️ **Support**
 
 If you have questions or need support, please submit an Issue in this repository or send an email to [antonaccio@brown.edu](mailto:antonaccio@brown.edu).
