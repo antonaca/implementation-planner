@@ -13,7 +13,7 @@ This tool is designed for:
 
 This tool offers a structured way to:
 - Break down your implementation project into actionable steps
-- Document determinants, strategies, mechanisms, and outcomes for your implementation project
+- Identify implementation determinants, select appropriate strategies, specify mechanisms, and document outcomes
 - Track progress and adapt plans as your project evolves
 - Reuse templates for new projects or adapt from existing plans (e.g., see the [hivprep-plan](https://github.com/antonaca/hivprep-plan) repository for an applied example)
 
