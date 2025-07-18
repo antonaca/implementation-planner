@@ -1727,8 +1727,11 @@
             });
 
             if (newRowElement.querySelector('.core-component-dropdown')) {
+                const defaultOptions = ['Content', 'Evaluation', 'Training', 'Context'];
                 const coreComponents = getPlanData().tables['fidelity-plan-container']?.map(c => c.component).filter(Boolean) || [];
-                populateSelect(newRowElement.querySelector('.core-component-dropdown'), coreComponents, 'Select a component...');
+                const strategies = getPlanData().tables['strategies-container']?.map(s => s.strategy).filter(Boolean) || [];
+                const combinedOptions = new Set([...defaultOptions, ...coreComponents, ...strategies]);
+                populateSelect(newRowElement.querySelector('.core-component-dropdown'), Array.from(combinedOptions), 'Select what was modified...');
             }
             
             Object.entries(data).forEach(([field, value]) => {
